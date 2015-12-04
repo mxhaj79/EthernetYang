@@ -1,13 +1,9 @@
-module ethernet {
-  namespace "urn:ieee:params:xml:ns:yang:ethernet";
+module ieee-ethernet {
+  namespace "urn:ieee:params:xml:ns:yang:ieee-ethernet";
   prefix eth;
 
   import ietf-interfaces {
     prefix if;
-  }
-
-  import iana-if-type {
-    prefix ianaift;
   }
 
   organization
@@ -29,6 +25,8 @@ module ethernet {
      Ethernet Interfaces, with the hope that it forms the basis of a
      standardized 802.3 Ethernet interface configuration YANG
      model.";
+    reference "IEEE 802.3-2015, unless dated explicitly";
+
   
   revision 2015-11-23 {
     description
@@ -430,7 +428,7 @@ module ethernet {
  "Augments interfaces-state model with 803.2 Ethernet
   specific operational state nodes";
 
-    container Ethernet {
+    container ethernet {
       description
         "Contains operational state for Ethernet interfaces";
 
@@ -488,9 +486,9 @@ module ethernet {
           }
         }
         description 
- "The current mode of operation of the IEEE Std 802.3 Ethernet interface. 
-  The value of 'unknown' indicates that the current duplex mode could not be determined. 
-  The value of 'full' indicates that the IEEE Std 802.3 Ethernet interface operates in full duplex mode. 
+ "The current mode of operation of the IEEE Std 802.3 Ethernet interface.
+  The value of 'unknown' indicates that the current duplex mode could not be determined.
+  The value of 'full' indicates that the IEEE Std 802.3 Ethernet interface operates in full duplex mode.
   The value of 'half' indicates that the IEEE Std 802.3 Ethernet interface operates in half duplex mode. ";
                 reference "IEEE Std 802.3, 30.3.1.1.32, aDuplexStatus";
  
@@ -533,9 +531,9 @@ module ethernet {
                 type pause-control;
                 description 
                  "A value that identifies the current (when read) or target (when set) operational state of the PAUSE MAC Control function (when read).
-                  This object is used to configure the default administrative PAUSE mode for this IEEE Std 802.3 Ethernet interface. 
-                  When set, this value of this object represents the administratively-configured PAUSE mode for this IEEE Std 802.3 Ethernet interface. If Auto-Negotiation is not enabled or is not implemented for the active MAU attached to this IEEE Std 802.3 Ethernet interface, the value of this object determines the operational PAUSE mode of the IEEE Std 802.3 Ethernet interface whenever it is operating in full-duplex mode. In this case, a set to this object will force the IEEE Std 802.3 Ethernet interface into the specified mode. If Auto-Negotiation is implemented and enabled for the MAU attached to this IEEE Std 802.3 Ethernet interface, the PAUSE mode for this IEEE Std 802.3 Ethernet interface is determined by Auto-Negotiation, and the value of this object denotes the mode to which the IEEE Std 802.3 Ethernet interface will automatically revert if/when Auto-Negotiation is later disabled. 
-                  Note that the value of this object is ignored when the IEEE Std 802.3 Ethernet interface is not operating in full-duplex mode. An attempt to set this object to 'enabled-Tx' or 'enabled-Rx' will fail on IEEE Std 802.3 Ethernet interfaces that do not support operation at greater than 100 Mb/s.\" 
+                  This object is used to configure the default administrative PAUSE mode for this IEEE Std 802.3 Ethernet interface.
+                  When set, this value of this object represents the administratively-configured PAUSE mode for this IEEE Std 802.3 Ethernet interface. If Auto-Negotiation is not enabled or is not implemented for the active MAU attached to this IEEE Std 802.3 Ethernet interface, the value of this object determines the operational PAUSE mode of the IEEE Std 802.3 Ethernet interface whenever it is operating in full-duplex mode. In this case, a set to this object will force the IEEE Std 802.3 Ethernet interface into the specified mode. If Auto-Negotiation is implemented and enabled for the MAU attached to this IEEE Std 802.3 Ethernet interface, the PAUSE mode for this IEEE Std 802.3 Ethernet interface is determined by Auto-Negotiation, and the value of this object denotes the mode to which the IEEE Std 802.3 Ethernet interface will automatically revert if/when Auto-Negotiation is later disabled.
+                  Note that the value of this object is ignored when the IEEE Std 802.3 Ethernet interface is not operating in full-duplex mode. An attempt to set this object to 'enabled-Tx' or 'enabled-Rx' will fail on IEEE Std 802.3 Ethernet interfaces that do not support operation at greater than 100 Mb/s.\"
                   When read, the value of this object reflects the current operational PAUSE Control function of the IEEE Std 802.3 Ethernet interface.";
                 reference "IEEE Std 802.3.1, dot3PauseAdminMode and dot3PauseOperMode";
             }
@@ -567,7 +565,7 @@ module ethernet {
     }
     description "Augments 'statistics' container in ietf-interfaces/interfaces-state model for IEEE Std 802.3 Ethernet interfaces";
 
-    container Ethernet {
+    container ethernet {
       description
         "Contains statistics specific to IEEE Std 802.3 Ethernet interfaces";
             leaf in-pkts-errors-FCS {
@@ -602,12 +600,12 @@ module ethernet {
                 type uint64;
                 units errors;
                 description 
-                 "For an IEEE Std 802.3 Ethernet operating at 100 Mb/s, the number of times there was an invalid data symbol when a valid carrier was present. 
-                  For an IEEE Std 802.3 Ethernet operating in half-duplex mode at 1000 Mb/s, the number of times the receiving media is non-idle (a carrier event) for a period of time equal to or greater than slotTime, and during which there was at least one occurrence of an event that causes the PHY to indicate 'Data reception error' or 'carrier extend error' on the GMII. 
-                  For an IEEE Std 802.3 Ethernet operating in full-duplex mode at 1000 Mb/s, the number of times the receiving media is non-idle (a carrier event) for a period of time equal to or greater than minFrameSize, and during which there was at least one occurrence of an event that causes the PHY to indicate 'Data reception error' on the GMII. 
-                  For an IEEE Std 802.3 Ethernet operating at 10 Gb/s, 40 Gb/s, and 100 Gb/s, it is a count of the number of times the receiving media is non-idle (the time between the Start of Packet Delimiter and the End of Packet Delimiter) for a period of time equal to or greater than minFrameSize, and during which there was at least one occurrence of an event that causes the PHY to indicate 'Receive Error' on the XGMII, the XLGMII, or the CGMII. The count represented by an instance of this object is incremented at most once per carrier event, even if multiple symbol errors occur during the carrier event. 
-                  This count does not increment if a collision is present. 
-                  This counter does not increment when the IEEE Std 802.3 Ethernet is operating at 10 Mb/s. 
+                 "For an IEEE Std 802.3 Ethernet operating at 100 Mb/s, the number of times there was an invalid data symbol when a valid carrier was present.
+                  For an IEEE Std 802.3 Ethernet operating in half-duplex mode at 1000 Mb/s, the number of times the receiving media is non-idle (a carrier event) for a period of time equal to or greater than slotTime, and during which there was at least one occurrence of an event that causes the PHY to indicate 'Data reception error' or 'carrier extend error' on the GMII.
+                  For an IEEE Std 802.3 Ethernet operating in full-duplex mode at 1000 Mb/s, the number of times the receiving media is non-idle (a carrier event) for a period of time equal to or greater than minFrameSize, and during which there was at least one occurrence of an event that causes the PHY to indicate 'Data reception error' on the GMII.
+                  For an IEEE Std 802.3 Ethernet operating at 10 Gb/s, 40 Gb/s, and 100 Gb/s, it is a count of the number of times the receiving media is non-idle (the time between the Start of Packet Delimiter and the End of Packet Delimiter) for a period of time equal to or greater than minFrameSize, and during which there was at least one occurrence of an event that causes the PHY to indicate 'Receive Error' on the XGMII, the XLGMII, or the CGMII. The count represented by an instance of this object is incremented at most once per carrier event, even if multiple symbol errors occur during the carrier event.
+                  This count does not increment if a collision is present.
+                  This counter does not increment when the IEEE Std 802.3 Ethernet is operating at 10 Mb/s.
                   Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime ";
                 reference 
                  "IEEE Std 802.3, 30.3.2.1.5, aSymbolErrorDuringCarrier
@@ -626,8 +624,8 @@ module ethernet {
                     type uint64;
                     units errors;
                     description 
-                     "A count of times that the SQE TEST ERROR is received on a particular interface. The SQE TEST ERROR is set in accordance with the rules for verification of the SQE detection mechanism in the PLS Carrier Sense Function as described in IEEE Std 802.3, 7.2.4.6. 
-                      This counter does not increment on IEEE Std 802.3 Ethernet interfaces operating at speeds greater than 10 Mb/s, or on IEEE Std 802.3 Ethernet interfaces operating in full-duplex mode. 
+                     "A count of times that the SQE TEST ERROR is received on a particular interface. The SQE TEST ERROR is set in accordance with the rules for verification of the SQE detection mechanism in the PLS Carrier Sense Function as described in IEEE Std 802.3, 7.2.4.6.
+                      This counter does not increment on IEEE Std 802.3 Ethernet interfaces operating at speeds greater than 10 Mb/s, or on IEEE Std 802.3 Ethernet interfaces operating in full-duplex mode.
                       Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime ";
                     reference 
                      "IEEE Std 802.3, 7.2.4.6, also 30.3.2.1.4,  aSQETestErrors
@@ -637,9 +635,9 @@ module ethernet {
                     type uint64;
                     units errors;
                     description 
-                     "A count of frames for which reception on a particular IEEE Std 802.3 Ethernet interface fails due to an internal MAC sublayer receive error. 
-                      A frame is only counted by an instance of this object if it is not counted by the corresponding instance of either the 'in-pkts-too-long' object, the 'in-pkts-errors-alignment-FCS' object, or the 'in-pkts-errors-FCS' object. The precise meaning of the count represented by an instance of this object is implementation-specific. 
-                      In particular, an instance of this object may represent a count of receive errors on a particular IEEE Std 802.3 Ethernet interface that are not otherwise counted. 
+                     "A count of frames for which reception on a particular IEEE Std 802.3 Ethernet interface fails due to an internal MAC sublayer receive error.
+                      A frame is only counted by an instance of this object if it is not counted by the corresponding instance of either the 'in-pkts-too-long' object, the 'in-pkts-errors-alignment-FCS' object, or the 'in-pkts-errors-FCS' object. The precise meaning of the count represented by an instance of this object is implementation-specific.
+                      In particular, an instance of this object may represent a count of receive errors on a particular IEEE Std 802.3 Ethernet interface that are not otherwise counted.
                       Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime ";
                     reference "IEEE Std 802.3, 30.3.1.1.15, aFramesLostDueToIntMACRcvError";
                 }
@@ -647,8 +645,8 @@ module ethernet {
                     type uint64;
                     units frames;
                     description 
-                     "A count of frames that are involved in a single collision, and are subsequently transmitted successfully. A frame that is counted by an instance of this object is also counted by the corresponding instance of either 'out-unicast-ptks', 'out-broadcast-pkts', or 'out-multicast-pkts', and is not counted by the corresponding instance of the 'out-ptks-collision-multiple'. 
-                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in full-duplex mode. 
+                     "A count of frames that are involved in a single collision, and are subsequently transmitted successfully. A frame that is counted by an instance of this object is also counted by the corresponding instance of either 'out-unicast-ptks', 'out-broadcast-pkts', or 'out-multicast-pkts', and is not counted by the corresponding instance of the 'out-ptks-collision-multiple'.
+                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in full-duplex mode.
                       Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
                     reference "IEEE Std 802.3, 30.3.1.1.3, aSingleCollisionFrames";
                 }
@@ -656,8 +654,8 @@ module ethernet {
                     type uint64;
                     units frames;
                     description 
-                     "A count of frames that are involved in multiple collisions, and are subsequently transmitted successfully. A frame that is counted by an instance of this object is also counted by the corresponding instance of either 'out-unicast-ptks', 'out-broadcast-pkts', or 'out-multicast-pkts', and is not counted by the corresponding instance of the 'out-ptks-collision-single'. 
-                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in full-duplex mode. 
+                     "A count of frames that are involved in multiple collisions, and are subsequently transmitted successfully. A frame that is counted by an instance of this object is also counted by the corresponding instance of either 'out-unicast-ptks', 'out-broadcast-pkts', or 'out-multicast-pkts', and is not counted by the corresponding instance of the 'out-ptks-collision-single'.
+                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in full-duplex mode.
                       Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
                     reference "IEEE Std 802.3, 30.3.1.1.4, aMultipleCollisionFrames";
                 }
@@ -665,9 +663,9 @@ module ethernet {
                     type uint64;
                     units frames;
                     description 
-                     "A count of frames for which the first transmission attempt on a particular IEEE Std 802.3 Ethernet interface is delayed because the medium is busy. 
-                      A deferred frame that is not subject to any number of collisions is not counted by an instance of 'out-pkts-collision-single' or 'out-pkts-collision-multiple' objects. 
-                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in full-duplex mode. 
+                     "A count of frames for which the first transmission attempt on a particular IEEE Std 802.3 Ethernet interface is delayed because the medium is busy.
+                      A deferred frame that is not subject to any number of collisions is not counted by an instance of 'out-pkts-collision-single' or 'out-pkts-collision-multiple' objects.
+                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in full-duplex mode.
                       Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
                     reference "IEEE Std 802.3, 30.3.1.1.9, aFramesWithDeferredXmissions";
                 }
@@ -675,8 +673,8 @@ module ethernet {
                     type uint64;
                     units frames;
                     description 
-                     "A count of frames for which transmission on a particular IEEE Std 802.3 Ethernet interface fails due to excessive collisions. 
-                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in full-duplex mode. 
+                     "A count of frames for which transmission on a particular IEEE Std 802.3 Ethernet interface fails due to excessive collisions.
+                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in full-duplex mode.
                       Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime ";
                     reference "IEEE Std 802.3, 30.3.1.1.11, aFramesAbortedDueToXSColls";
                 }
@@ -684,9 +682,9 @@ module ethernet {
                     type uint64;
                     units collisions;
                     description 
-                     "The number of times that a collision is detected on a particular IEEE Std 802.3 Ethernet interface later than one slotTime into the transmission of a packet. 
-                      A (late) collision included in a count represented by an instance of this object is also considered as a (generic) collision for purposes of other collision-related statistics. 
-                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in full-duplex mode. 
+                     "The number of times that a collision is detected on a particular IEEE Std 802.3 Ethernet interface later than one slotTime into the transmission of a packet.
+                      A (late) collision included in a count represented by an instance of this object is also considered as a (generic) collision for purposes of other collision-related statistics.
+                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in full-duplex mode.
                       Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime ";
                     reference "IEEE Std 802.3, 30.3.1.1.10, aLateCollisions";
                 }
@@ -694,8 +692,8 @@ module ethernet {
                     type uint64;
                     units errors;
                     description 
-                     "A count of frames for which transmission on a particular IEEE Std 802.3 Ethernet interface fails due to an internal MAC sublayer transmit error. 
-                      A frame is only counted by an instance of this object if it is not counted by the corresponding instance of either the 'out-collisions-late' object, the 'out-pkts-collisions-excessive' object, or the 'out-errors-carrier-sense' object. The precise meaning of the count represented by an instance of this object is implementation-specific. In particular, an instance of this object may represent a count of transmission errors on a particular IEEE Std 802.3 Ethernet interface that are not otherwise counted. 
+                     "A count of frames for which transmission on a particular IEEE Std 802.3 Ethernet interface fails due to an internal MAC sublayer transmit error.
+                      A frame is only counted by an instance of this object if it is not counted by the corresponding instance of either the 'out-collisions-late' object, the 'out-pkts-collisions-excessive' object, or the 'out-errors-carrier-sense' object. The precise meaning of the count represented by an instance of this object is implementation-specific. In particular, an instance of this object may represent a count of transmission errors on a particular IEEE Std 802.3 Ethernet interface that are not otherwise counted.
                       Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime ";
                     reference "IEEE Std 802.3, 30.3.1.1.12, aFramesLostDueToIntMACXmitError";
                 }
@@ -703,9 +701,9 @@ module ethernet {
                     type uint64;
                     units errors;
                     description 
-                     "The number of times that the carrier sense condition was lost or never asserted when attempting to transmit a frame on a particular IEEE Std 802.3 Ethernet interface. 
-                      The count represented by an instance of this object is incremented at most once per transmission attempt, even if the carrier sense condition fluctuates during a transmission attempt. 
-                      This counter does not increment when the IEEE Std 802.3 Ethernetinterface is operating in full-duplex mode. 
+                     "The number of times that the carrier sense condition was lost or never asserted when attempting to transmit a frame on a particular IEEE Std 802.3 Ethernet interface.
+                      The count represented by an instance of this object is incremented at most once per transmission attempt, even if the carrier sense condition fluctuates during a transmission attempt.
+                      This counter does not increment when the IEEE Std 802.3 Ethernetinterface is operating in full-duplex mode.
                       Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime ";
                     reference "IEEE Std 802.3, 30.3.1.1.13, aCarrierSenseErrors";
                 }
@@ -722,9 +720,9 @@ module ethernet {
                         type uint64;
                         units frames;
                         description 
-                         "A count of individual MAC frames for which the transmission (successful or otherwise) on a particular interface occurs after the frame has experienced exactly the number of collisions in the associated dot3CollCount object. 
-                          For example, a frame which is transmitted on an interface after experiencing exactly 4 collisions would be indicated by incrementing only collision-count-pkts object associated with the collision-count value of 4. No other instance of collision-count-pkts would be incremented in this example. 
-                          This counter does not increment when the interface is operating in full-duplex mode. 
+                         "A count of individual MAC frames for which the transmission (successful or otherwise) on a particular interface occurs after the frame has experienced exactly the number of collisions in the associated dot3CollCount object.
+                          For example, a frame which is transmitted on an interface after experiencing exactly 4 collisions would be indicated by incrementing only collision-count-pkts object associated with the collision-count value of 4. No other instance of collision-count-pkts would be incremented in this example.
+                          This counter does not increment when the interface is operating in full-duplex mode.
                           Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
                     }
                 }
@@ -738,7 +736,7 @@ module ethernet {
                     type uint64;
                     units frames;
                     description 
-                     "A count of Extension MAC Control frames received on this IEEE Std 802.3 Ethernet interface. 
+                     "A count of Extension MAC Control frames received on this IEEE Std 802.3 Ethernet interface.
                       Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
                     reference 
                      "IEEE Std 802.3, 30.3.8.2 aEXTENSIONMACCtrlFramesReceived
@@ -748,7 +746,7 @@ module ethernet {
                     type uint64;
                     units frames;
                     description 
-                     "A count of PFC MAC Control frames received on this IEEE Std 802.3 Ethernet interface. 
+                     "A count of PFC MAC Control frames received on this IEEE Std 802.3 Ethernet interface.
                       Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
                     reference "IEEE Std 802.3.1, dot3HCInPFCFrames";
                 }
@@ -756,8 +754,8 @@ module ethernet {
                     type uint64;
                     units frames;
                     description 
-                     "A count of PAUSE MAC Control frames received on this IEEE Std 802.3 Ethernet interface. 
-                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in half-duplex mode 
+                     "A count of PAUSE MAC Control frames received on this IEEE Std 802.3 Ethernet interface.
+                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in half-duplex mode
                       Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
                     reference 
                      "IEEE Std 802.3, 30.3.4.3,aPAUSEMACCtrlFramesReceived
@@ -767,8 +765,8 @@ module ethernet {
                     type uint64;
                     units frames;
                     description 
-                     "A count of  MAC Control frames with unknown/undefined/unsupported received on this IEEE Std 802.3 Ethernet interface. 
-                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in half-duplex mode 
+                     "A count of  MAC Control frames with unknown/undefined/unsupported received on this IEEE Std 802.3 Ethernet interface.
+                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in half-duplex mode
                       Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
                     reference 
                      "IEEE Std 802.3, 30.3.3.5 aUnsupportedOpcodesReceived
@@ -778,7 +776,7 @@ module ethernet {
                     type uint64;
                     units frames;
                     description 
-                     "A count of Extension MAC Control frames transmitted on this IEEE Std 802.3 Ethernet interface. 
+                     "A count of Extension MAC Control frames transmitted on this IEEE Std 802.3 Ethernet interface.
                       Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
                     reference 
                      "IEEE Std 802.3, 30.3.8.1 aEXTENSIONMACCtrlFramesTransmitted
@@ -788,7 +786,7 @@ module ethernet {
                     type uint64;
                     units frames;
                     description 
-                     "A count of PFC MAC Control frames transmitted on this IEEE Std 802.3 Ethernet interface. 
+                     "A count of PFC MAC Control frames transmitted on this IEEE Std 802.3 Ethernet interface.
                       Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
                     reference "IEEE Std 802.3.1, dot3HCOutPFCFrames ";
                 }
@@ -796,8 +794,8 @@ module ethernet {
                     type uint64;
                     units frames;
                     description 
-                     "A count of PAUSE MAC Control frames transmitted on this IEEE Std 802.3 Ethernet interface. 
-                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in half-duplex mode 
+                     "A count of PAUSE MAC Control frames transmitted on this IEEE Std 802.3 Ethernet interface.
+                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in half-duplex mode
                       Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
                     reference 
                      "IEEE Std 802.3, 30.3.4.2,aPAUSEMACCtrlFramesTransmitted
@@ -810,7 +808,7 @@ module ethernet {
                     type uint64;
                     units microsends;
                     description 
-                     "A count of occurrences of the transition from DEASSERT to ASSERT of the LPI_INDICATE parameter. The indication reflects the state of the PHY according to the requirements of the RS (see IEEE Std 802.3 22.7, 35.4, and 46.4). 
+                     "A count of occurrences of the transition from DEASSERT to ASSERT of the LPI_INDICATE parameter. The indication reflects the state of the PHY according to the requirements of the RS (see IEEE Std 802.3 22.7, 35.4, and 46.4).
                       This counter has a maximum increment rate of 50 000 counts per second at 100 Mb/s; 90 000 counts per second at 1000 Mb/s; and 230 000 counts per second at 10 Gb/s. ";
                     reference "IEEE Std 802.3, 30.3.2.1.11 aReceiveLPITransitions";
                 }
@@ -818,8 +816,8 @@ module ethernet {
                     type uint64;
                     units microsends;
                     description 
-                     "A count reflecting the amount of time that the LPI_REQUEST parameter has the value ASSERT. 
-                      The request is indicated to the PHY according to the requirements of the RS (see IEEE Std 802.3 22.7, 35.4, and 46.4). 
+                     "A count reflecting the amount of time that the LPI_REQUEST parameter has the value ASSERT.
+                      The request is indicated to the PHY according to the requirements of the RS (see IEEE Std 802.3 22.7, 35.4, and 46.4).
                       This counter has a maximum increment rate of 1 000 000 counts per second. ";
                     reference "IEEE Std 802.3, 30.3.2.1.8 aTransmitLPIMicroseconds";
                 }
@@ -827,7 +825,7 @@ module ethernet {
                     type uint64;
                     units microsends;
                     description 
-                     "A count of occurrences of the transition from state LPI_DEASSERTED to state LPI_ASSERTED of the LPI transmit state diagram is the RS. The state transition corresponds to the assertion of the LPI_REQUEST parameter. The request is indicated to the PHY according to the requirements of the RS (see IEEE Std 802.3 22.7, 35.4, 46.4.) 
+                     "A count of occurrences of the transition from state LPI_DEASSERTED to state LPI_ASSERTED of the LPI transmit state diagram is the RS. The state transition corresponds to the assertion of the LPI_REQUEST parameter. The request is indicated to the PHY according to the requirements of the RS (see IEEE Std 802.3 22.7, 35.4, 46.4.)
                       This counter has a maximum increment rate of 50 000 counts per second at 100 Mb/s; 90 000 counts per second at 1000 Mb/s; and 230 000 counts per second at 10 Gb/s. ";
                     reference "IEEE Std 802.3, 30.3.2.1.10 aTransmitLPITransitions";
                 }
@@ -835,8 +833,8 @@ module ethernet {
                     type uint64;
                     units microsends;
                     description 
-                     "A count reflecting the amount of time that the LPI_INDICATION parameter has the value ASSERT. 
-                      The request is indicated to the PHY according to the requirements of the RS (see IEEE Std 802.3 22.7, 35.4, and 46.4). 
+                     "A count reflecting the amount of time that the LPI_INDICATION parameter has the value ASSERT.
+                      The request is indicated to the PHY according to the requirements of the RS (see IEEE Std 802.3 22.7, 35.4, and 46.4).
                       This counter has a maximum increment rate of 1 000 000 counts per second. ";
                     reference "IEEE Std 802.3, 30.3.2.1.9 aReceiveLPIMicroseconds";
                 }
