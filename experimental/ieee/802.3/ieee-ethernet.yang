@@ -5,6 +5,10 @@ module ieee-ethernet {
   import ietf-interfaces {
     prefix if;
   }
+    import iana-if-type {
+        prefix ianaift;
+    }
+
 
   organization
     "Cisco Systems, Inc.
