@@ -84,7 +84,6 @@ module ieee-ethernet {
   }
 
   typedef flow-control-settings {
-       
     type enumeration {
     
       enum true {
