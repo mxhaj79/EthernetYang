@@ -85,7 +85,7 @@ module ieee802-ethernet-interface-csmacd {
            at re-initialization of the management system, and at
            other times as indicated by the value of the 
            'discontinuity-time' leaf defined in ietf-interfaces
-           YANG module (RFC 7223)."
+           YANG module (RFC 7223).";
         reference 
           "IEEE Std 802.3, 7.2.4.6, also 30.3.2.1.4,  aSQETestErrors";
       }

@@ -15,10 +15,6 @@ module ieee802-ethernet-interface {
     prefix ianaift;
   }
 
-  include ieee802-ethernet-interface-csmacd {
-    description "Half duplex CSMA/CD specific schema nodes";
-  }
-
   organization
     "Web URL: http://www.ieee802.org/3/
 

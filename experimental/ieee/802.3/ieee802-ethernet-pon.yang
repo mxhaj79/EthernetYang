@@ -1,4 +1,4 @@
-module ieee-ethernet-pon {
+module ieee802-ethernet-pon {
 
   /*** NAMESPACE / PREFIX DEFINITION ***/
 
@@ -12,7 +12,7 @@ module ieee-ethernet-pon {
   
   import ietf-interfaces { prefix if; }
 
-  import ieee-ethernet { prefix eth; }
+  import ieee802-ethernet-interface { prefix eth; }
 
   /*** META INFORMATION ***/
 

@@ -1,4 +1,4 @@
-module ethernet-link-oam {
+module ieee802-ethernet-link-oam {
 
   /*** NAMESPACE / PREFIX DEFINITION ***/
 
@@ -12,7 +12,7 @@ module ethernet-link-oam {
   
   import ietf-interfaces { prefix "if"; }
 
-  import ethernet { prefix "eth"; }
+  import ieee802-ethernet-interface { prefix "eth"; }
 
   /*** META INFORMATION ***/
 
