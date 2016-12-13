@@ -1,6 +1,8 @@
 module ieee802-ethernet-interface {
-  // TODO - Should we moved files under standard/802.3/drafts, away from experimental.
-  namespace "urn:ieee:params:xml:ns:yang:ieee802-ethernet-interface";
+  // TODO - Should we moved files under standard/802.3/drafts,
+  //        away from experimental?
+  namespace
+    "urn:ieee:params:xml:ns:yang:ieee802-ethernet-interface";
 
   // QUERY - Are we OK to base models on YANG 1.1?
   yang-version "1.1";
@@ -45,18 +47,22 @@ module ieee802-ethernet-interface {
   
   revision 2016-11-23 {
     description
-      "Initial revision of YANG model for IEEE Std 802.3 Ethernet interfaces
+      "Initial revision of YANG model for IEEE Std 802.3 Ethernet
+       interfaces
 
        Changes from previous draft:
-        - Changed speed to decimal64, in Gb/s to 3 decimal places.
-        - Moved Ethernet stats under the Ethernet interface container, since
-          someone retrieving the higher layer stats may not want to get
-          Ethernet stats at the same time because they are a lower layer.";
+       - Changed speed to decimal64, in Gb/s to 3 decimal places.
+       - Moved Ethernet stats under the Ethernet interface container,
+         since someone retrieving the higher layer stats may not want
+         to get Ethernet statistics at the same time because they
+         are a lower layer.";
     reference 
-      "IEEE P802.3.2 (IEEE 802.3cf) YANG Data Model Definitions Task Force";
+      "IEEE P802.3.2 (IEEE 802.3cf) YANG Data Model Definitions Task
+       Force";
   }
 
-  // TEMP NOTE: Changed speed from enumeration to decimal to make it more future proof and easier to store/use.  
+  // NOTE: Changed speed from enumeration to decimal to make
+  //       it more future proof and easier to store/use.
   typedef eth-if-speed {
     description
       "Used to represent the configured, negotiated, or actual speed of
@@ -73,7 +79,7 @@ module ieee802-ethernet-interface {
     
       enum true {
         description 
-          "The value of 'true' for IEEE Std 802.3 Ethernet interfaces
+          "The value of 'true' for IEEEStd 802.3 Ethernet interfaces
            operating at speeds above 1000 Mb/s that support Rate
            Control through lowering the average data rate of the MAC
            sublayer, with frame granularity.";
@@ -88,9 +94,9 @@ module ieee802-ethernet-interface {
       }
     }
     description
-      "Enumerates the possible values for the 'rate-control-ability' object";
-        reference "IEEE Std 802.3, 30.3.1.1.33, aRateControlAbility";
-
+      "Enumerates the possible values for the 'rate-control-ability'
+       object";
+    reference "IEEE Std 802.3, 30.3.1.1.33, aRateControlAbility";
   }
 
   typedef rate-control {
@@ -119,7 +125,8 @@ module ieee802-ethernet-interface {
       }
     }
     description
-      "Enumerates the possible values for the 'rate-control-status' object";
+      "Enumerates the possible values for the 'rate-control-status'
+       object";
     reference "IEEE Std 802.3, 30.3.1.1.34, aRateControlStatus";
   }
 
@@ -138,26 +145,31 @@ module ieee802-ethernet-interface {
         value 2;
 
         description 
-          "The PAUSE operation is enabled in transmit direction only";
+          "The PAUSE operation is enabled in transmit direction
+           only";
       }
     
       enum enabled-Rx {
         value 3;
 
         description 
-          "The PAUSE operation is enabled in receive direction only";
+          "The PAUSE operation is enabled in receive direction
+           only";
       }
     
       enum enabled-bidirectional {
         value 4;
 
         description 
-          "The PAUSE operation is enabled in receive and transmit directions";
+          "The PAUSE operation is enabled in receive and transmit
+           directions";
       }
     }
     description
-      "Enumerates the possible values for the 'macc-pause-control' object";
-    reference "IEEE Std 802.3.1, dot3PauseAdminMode and dot3PauseOperMode";
+      "Enumerates the possible values for the 'macc-pause-control'
+       object";
+    reference
+      "IEEE Std 802.3.1, dot3PauseAdminMode and dot3PauseOperMode";
 
   }
 
@@ -452,10 +464,10 @@ module ieee802-ethernet-interface {
       // XXX, duplex values shouldn't need to be explicitly assigned.
       leaf duplex {
         type enumeration {
-          // XXX, do we need unknown here?  Just don't return the leaf.
+          // XXX, do we need unknown here? Just don't return the leaf.
           enum unknown {
             description 
-              "current  duplex mode could not be determined";
+              "The current duplex mode could not be determined";
             reference 
               "IEEE Std 802.3, 30.3.1.1.32, aDuplexStatus";
           }
@@ -471,10 +483,8 @@ module ieee802-ethernet-interface {
           }
         }
         description 
-          "The current mode of operation of the IEEE Std 802.3 Ethernet interface.
-           The value of 'unknown' indicates that the current duplex mode could not be determined.
-           The value of 'full' indicates that the IEEE Std 802.3 Ethernet interface operates in full duplex mode.
-           The value of 'half' indicates that the IEEE Std 802.3 Ethernet interface operates in half duplex mode. ";
+          "The current mode of operation of the IEEE Std 802.3
+           Ethernet interface.";
         reference "IEEE Std 802.3, 30.3.1.1.32, aDuplexStatus";
       }
       
@@ -491,14 +501,16 @@ module ieee802-ethernet-interface {
       }
       leaf rate-control {
         type rate-control;
-        description "The current Rate Control mode of operation of the MAC sublayer of this IEEE Std 802.3 Ethernet interface";
+        description
+          "The current Rate Control mode of operation of the MAC
+           sublayer of this IEEE Std 802.3 Ethernet interface";
         reference "IEEE Std 802.3, 30.3.1.1.34, aRateControlStatus";
       }
       leaf macc-extension-control {
         type boolean;
         description
-          "A value that identifies the current EXTENSION MAC
-            Control function, as specified in IEEE Std 802.3, Annex 31C.";
+          "A value that identifies the current EXTENSION MAC Control
+           function, as specified in IEEE Std 802.3, Annex 31C.";
         reference 
           "IEEE Std 802.3, 30.3.8.3 aEXTENSIONMACCtrlStatus
            IEEE Std 802.3.1, dot3ExtensionMacCtrlStatus ";
@@ -506,11 +518,11 @@ module ieee802-ethernet-interface {
       leaf macc-pfc-control {
         type boolean;
         description 
-          "A value that identifies the current operational state
-           of the PFC MAC Control function (when read), as specified
-           in IEEE Std 802.3, Annex 31C.
-           When read, the value of this object reflects the current
-           operational PFC mode of the IEEE Std 802.3 Ethernet interface.";
+          "A value that identifies the current operational state of
+           the PFC MAC Control function (when read), as specified in
+           IEEE Std 802.3, Annex 31C.  When read, the value of this
+           object reflects the current operational PFC mode of the
+           IEEE Std 802.3 Ethernet interface.";
         reference 
           "IEEE Std 802.3, 30.3.3.6, aPFCenableStatus
           IEEE Std 802.3.1, dot3PFCAdminMode and dot3PFCOperMode";
@@ -531,12 +543,16 @@ module ieee802-ethernet-interface {
            When read, the value of this object reflects the current
            operational PAUSE Control function of the IEEE Std 802.3
            Ethernet interface.";
-        reference "IEEE Std 802.3.1, dot3PauseAdminMode and dot3PauseOperMode";
+        reference
+          "IEEE Std 802.3.1, dot3PauseAdminMode and
+           dot3PauseOperMode";
       }
       leaf macc-control {
         type macc-control;
         config false;
-        description "A list of the possible MAC Control functions implemented for this interface.";
+        description
+          "A list of the possible MAC Control functions implemented
+           for this interface.";
         reference "IEEE Std 802.3.1, dot3ControlFunctionsSupported";
       }
       leaf frame-limit-slow-protocol {
@@ -558,49 +574,118 @@ module ieee802-ethernet-interface {
      */
     container statistics {
       description
-        "Contains statistics specific to IEEE Std 802.3 Ethernet interfaces";
+        "Contains statistics specific to IEEE Std 802.3 Ethernet
+         interfaces";
 
       leaf in-pkts-errors-FCS {
         type uint64;
         units frames;
         description 
-          "A count of frames received on a particular interface that are an integral number of octets in length but do not pass the FCS check. This count does not include frames received with frame-too-long or frame-too-short error. The count represented by an instance of this object is incremented when the frameCheckError status is returned by the MAC service to the LLC (or other MAC user). Received frames for which multiple error conditions pertain are, according to the conventions of IEEE 802.3 Layer Management, counted exclusively according to the error status presented to the LLC. Note: Coding errors detected by the Physical Layer for speeds above 10 Mb/s will cause the frame to fail the FCS check. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.
-           A frame that is counted by an instance of this object is also counted by the corresponding instance of 'in-errors' object.";
-        reference "IEEE Std 802.3, 30.3.1.1.6, aFrameCheckSequenceErrors";
+          "A count of frames received on a particular interface that
+           are an integral number of octets in length but do not pass
+           the FCS check. This count does not include frames received
+           with frame-too-long or frame-too-short error. The count
+           represented by an instance of this object is incremented
+           when the frameCheckError status is returned by the MAC
+           service to the LLC (or other MAC user). Received frames
+           for which multiple error conditions pertain are, according
+           to the conventions of IEEE 802.3 Layer Management, counted
+           exclusively according to the error status presented to the
+           LLC. Note: Coding errors detected by the Physical Layer
+           for speeds above 10 Mb/s will cause the frame to fail the
+           FCS check. Discontinuities in the value of this counter
+           can occur at re-initialization of the management system,
+           and at other times as indicated by the value of
+           ifCounterDiscontinuityTime.  A frame that is counted by an
+           instance of this object is also counted by the
+           corresponding instance of 'in-errors' object.";
+        reference
+          "IEEE Std 802.3, 30.3.1.1.6, aFrameCheckSequenceErrors";
       }
       leaf in-pkts-errors-alignment-FCS {
         type uint64;
         units frames;
         description 
-          "A count of frames received on a particular interface that are not an integral number of octets in length and do not pass the FCS check. The count represented by an instance of this object is incremented when the alignmentError status is returned by the MAC service to the LLC (or other MAC user). Received frames for which multiple error conditions pertain are, according to the conventions of IEEE 802.3 Layer Management, counted exclusively according to the error status presented to the LLC. This counter does not increment for group encoding schemes greater than 4 bits per group. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.
-           A frame that is counted by an instance of this object is also counted by the corresponding instance of 'in-errors' object.";
+          "A count of frames received on a particular interface that
+           are not an integral number of octets in length and do not
+           pass the FCS check. The count represented by an instance
+           of this object is incremented when the alignmentError
+           status is returned by the MAC service to the LLC (or other
+           MAC user). Received frames for which multiple error
+           conditions pertain are, according to the conventions of
+           IEEE 802.3 Layer Management, counted exclusively according
+           to the error status presented to the LLC. This counter
+           does not increment for group encoding schemes greater than
+           4 bits per group. Discontinuities in the value of this
+           counter can occur at re-initialization of the management
+           system, and at other times as indicated by the value of
+           ifCounterDiscontinuityTime.  A frame that is counted by an
+           instance of this object is also counted by the
+           corresponding instance of 'in-errors' object.";
         reference "IEEE Std 802.3, 30.3.1.1.7, aAlignmentErrors";
       }
       leaf in-giant-pkts {
         type uint64;
         units frames;
         description
-          "A count of frames received on a particular interface that exceed the maximum permitted frame size. The count represented by an instance of this object is incremented when the frameTooLong status is returned by the MAC service to the LLC (or other MAC user). Received frames for which multiple error conditions pertain are, according to the conventions of IEEE 802.3 Layer Management, counted exclusively according to the error status presented to the LLC. Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime.";
+          "A count of frames received on a particular interface that
+           exceed the maximum permitted frame size. The count
+           represented by an instance of this object is incremented
+           when the frameTooLong status is returned by the MAC
+           service to the LLC (or other MAC user). Received frames
+           for which multiple error conditions pertain are, according
+           to the conventions of IEEE 802.3 Layer Management, counted
+           exclusively according to the error status presented to the
+           LLC. Discontinuities in the value of this counter can
+           occur at re-initialization of the management system, and
+           at other times as indicated by the value of
+           ifCounterDiscontinuityTime.";
         reference "IEEE Std 802.3, 30.3.1.1.25, aFrameTooLongErrors";
       }
       leaf in-giant-threshold-pkts {
         type uint64;
         units octets;
         description
-          "This indicates the MAC frame length at which the 'in-giants-pkts' counter is incremented ";
+          "This indicates the MAC frame length at which the
+           'in-giants-pkts' counter is incremented";
         reference "IEEE Std 802.3, 30.3.1.1.37, aMaxFrameLength";
       }
       leaf in-errors-symbol {
         type uint64;
         units errors;
         description 
-          "For an IEEE Std 802.3 Ethernet operating at 100 Mb/s, the number of times there was an invalid data symbol when a valid carrier was present.
-           For an IEEE Std 802.3 Ethernet operating in half-duplex mode at 1000 Mb/s, the number of times the receiving media is non-idle (a carrier event) for a period of time equal to or greater than slotTime, and during which there was at least one occurrence of an event that causes the PHY to indicate 'Data reception error' or 'carrier extend error' on the GMII.
-           For an IEEE Std 802.3 Ethernet operating in full-duplex mode at 1000 Mb/s, the number of times the receiving media is non-idle (a carrier event) for a period of time equal to or greater than minFrameSize, and during which there was at least one occurrence of an event that causes the PHY to indicate 'Data reception error' on the GMII.
-           For an IEEE Std 802.3 Ethernet operating at 10 Gb/s, 40 Gb/s, and 100 Gb/s, it is a count of the number of times the receiving media is non-idle (the time between the Start of Packet Delimiter and the End of Packet Delimiter) for a period of time equal to or greater than minFrameSize, and during which there was at least one occurrence of an event that causes the PHY to indicate 'Receive Error' on the XGMII, the XLGMII, or the CGMII. The count represented by an instance of this object is incremented at most once per carrier event, even if multiple symbol errors occur during the carrier event.
-           This count does not increment if a collision is present.
-           This counter does not increment when the IEEE Std 802.3 Ethernet is operating at 10 Mb/s.
-            Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime ";
+          "For an IEEE Std 802.3 Ethernet operating at 100 Mb/s, the
+           number of times there was an invalid data symbol when a
+           valid carrier was present.  For an IEEE Std 802.3 Ethernet
+           operating in half-duplex mode at 1000 Mb/s, the number of
+           times the receiving media is non-idle (a carrier event)
+           for a period of time equal to or greater than slotTime,
+           and during which there was at least one occurrence of an
+           event that causes the PHY to indicate 'Data reception
+           error' or 'carrier extend error' on the GMII.  For an IEEE
+           Std 802.3 Ethernet operating in full-duplex mode at 1000
+           Mb/s, the number of times the receiving media is non-idle
+           (a carrier event) for a period of time equal to or greater
+           than minFrameSize, and during which there was at least one
+           occurrence of an event that causes the PHY to indicate
+           'Data reception error' on the GMII.  For an IEEE Std 802.3
+           Ethernet operating at 10 Gb/s, 40 Gb/s, and 100 Gb/s, it
+           is a count of the number of times the receiving media is
+           non-idle (the time between the Start of Packet Delimiter
+           and the End of Packet Delimiter) for a period of time
+           equal to or greater than minFrameSize, and during which
+           there was at least one occurrence of an event that causes
+           the PHY to indicate 'Receive Error' on the XGMII, the
+           XLGMII, or the CGMII. The count represented by an instance
+           of this object is incremented at most once per carrier
+           event, even if multiple symbol errors occur during the
+           carrier event.  This count does not increment if a
+           collision is present.  This counter does not increment
+           when the IEEE Std 802.3 Ethernet is operating at 10 Mb/s.
+           Discontinuities in the value of this counter can occur at
+           re-initialization of the management system, and at other
+           times as indicated by the value of
+           ifCounterDiscontinuityTime";
         reference 
           "IEEE Std 802.3, 30.3.2.1.5, aSymbolErrorDuringCarrier";
       }
@@ -615,138 +700,208 @@ module ieee802-ethernet-interface {
    */
   augment "/if:interfaces-state/if:interface/if:statistics" {
     when "if:type = 'ianaift:ethernetCsmacd'" {
-      description "Applies to all IEEE Std 802.3 Ethernet interfaces";
+      description
+        "Applies to all IEEE Std 802.3 Ethernet interfaces";
     }
-    description "Augments 'statistics' container in ietf-interfaces/interfaces-state model for IEEE Std 802.3 Ethernet interfaces";
-
+    description
+      "Augments 'statistics' container in
+       ietf-interfaces/interfaces-state model for IEEE Std 802.3
+       Ethernet interfaces";
+    
     container ethernet {
       description
-        "Contains statistics specific to IEEE Std 802.3 Ethernet interfaces";
+        "Contains statistics specific to IEEE Std 802.3 Ethernet
+         interfaces";
 
             // TODO - Not a statistic :-)
-            leaf rate-control-ability {
-                type boolean;
-                description 
-                 "The value of 'false' for IEEE Std 802.3 Ethernet interfaces operating at speeds above 1000 Mb/s that do not support Rate Control through lowering the average data rate of the MAC sublayer, with frame granularity.
-                  The value of 'true' for IEEE Std 802.3 Ethernet interfaces operating at speeds above 1000 Mb/s that support Rate Control through lowering the average data rate of the MAC sublayer, with frame granularity.";
-                reference "IEEE Std 802.3, 30.3.1.1.33, aRateControlAbility";
-            }
-            container statistics-csmacd {
-                description "Group of statistics specific to CSMA/CD operation of selected IEEE Std 802.3 Ethernet interfaces. ";
-            }
-            container statistics-macc {
-                description "Group of statistics specific to MAC Control operation of selected IEEE Std 802.3 Ethernet interfaces. ";
-                reference 
-                 "IEEE Std 802.3
-                  IEEE Std 802.3.1, dot3ExtensionTable";
-                leaf in-pkts-macc-extension {
-                    type uint64;
-                    units frames;
-                    description 
-                     "A count of Extension MAC Control frames received on this IEEE Std 802.3 Ethernet interface.
-                      Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
-                    reference 
-                     "IEEE Std 802.3, 30.3.8.2 aEXTENSIONMACCtrlFramesReceived
-                      IEEE Std 802.3.1, dot3HCInExtensionFrames";
-                }
-                leaf in-pkts-macc-pfc {
-                    type uint64;
-                    units frames;
-                    description 
-                     "A count of PFC MAC Control frames received on this IEEE Std 802.3 Ethernet interface.
-                      Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
-                    reference "IEEE Std 802.3.1, dot3HCInPFCFrames";
-                }
-                leaf in-pkts-macc-pause {
-                    type uint64;
-                    units frames;
-                    description 
-                     "A count of PAUSE MAC Control frames received on this IEEE Std 802.3 Ethernet interface.
-                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in half-duplex mode
-                      Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
-                    reference 
-                     "IEEE Std 802.3, 30.3.4.3,aPAUSEMACCtrlFramesReceived
-                      IEEE Std 802.3.1, dot3HCInPauseFrames and dot3InPauseFrames";
-                }
-                leaf in-pkts-macc-unknown {
-                    type uint64;
-                    units frames;
-                    description 
-                     "A count of  MAC Control frames with unknown/undefined/unsupported received on this IEEE Std 802.3 Ethernet interface.
-                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in half-duplex mode
-                      Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
-                    reference 
-                     "IEEE Std 802.3, 30.3.3.5 aUnsupportedOpcodesReceived
-                      IEEE Std 802.3.1, dot3ControlInUnknownOpcodes and dot3HCControlInUnknownOpcodes";
-                }
-                leaf out-pkts-macc-extension {
-                    type uint64;
-                    units frames;
-                    description 
-                     "A count of Extension MAC Control frames transmitted on this IEEE Std 802.3 Ethernet interface.
-                      Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
-                    reference 
-                     "IEEE Std 802.3, 30.3.8.1 aEXTENSIONMACCtrlFramesTransmitted
-                      IEEE Std 802.3.1, dot3HCOutExtensionFrames ";
-                }
-                leaf out-pkts-macc-pfc {
-                    type uint64;
-                    units frames;
-                    description 
-                     "A count of PFC MAC Control frames transmitted on this IEEE Std 802.3 Ethernet interface.
-                      Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
-                    reference "IEEE Std 802.3.1, dot3HCOutPFCFrames ";
-                }
-                leaf out-pkts-macc-pause {
-                    type uint64;
-                    units frames;
-                    description 
-                     "A count of PAUSE MAC Control frames transmitted on this IEEE Std 802.3 Ethernet interface.
-                      This counter does not increment when the IEEE Std 802.3 Ethernet interface is operating in half-duplex mode
-                      Discontinuities in the value of this counter can occur at re-initialization of the management system, and at other times as indicated by the value of ifCounterDiscontinuityTime. ";
-                    reference 
-                     "IEEE Std 802.3, 30.3.4.2,aPAUSEMACCtrlFramesTransmitted
-                      IEEE Std 802.3.1, dot3HCOutPauseFrames and dot3OutPauseFrames";
-                }
-            }
-            container statistics-lpi {
-                description "Group of statistics specific to MAC Control operation of selected IEEE Std 802.3 Ethernet interfaces. ";
-                leaf in-lpi-transiton-count {
-                    type uint64;
-                    units microsends;
-                    description 
-                     "A count of occurrences of the transition from DEASSERT to ASSERT of the LPI_INDICATE parameter. The indication reflects the state of the PHY according to the requirements of the RS (see IEEE Std 802.3 22.7, 35.4, and 46.4).
-                      This counter has a maximum increment rate of 50 000 counts per second at 100 Mb/s; 90 000 counts per second at 1000 Mb/s; and 230 000 counts per second at 10 Gb/s. ";
-                    reference "IEEE Std 802.3, 30.3.2.1.11 aReceiveLPITransitions";
-                }
-                leaf in-lpi-ms {
-                    type uint64;
-                    units microsends;
-                    description 
-                     "A count reflecting the amount of time that the LPI_REQUEST parameter has the value ASSERT.
-                      The request is indicated to the PHY according to the requirements of the RS (see IEEE Std 802.3 22.7, 35.4, and 46.4).
-                      This counter has a maximum increment rate of 1 000 000 counts per second. ";
-                    reference "IEEE Std 802.3, 30.3.2.1.8 aTransmitLPIMicroseconds";
-                }
-                leaf out-lpi-transiton-count {
-                    type uint64;
-                    units microsends;
-                    description 
-                     "A count of occurrences of the transition from state LPI_DEASSERTED to state LPI_ASSERTED of the LPI transmit state diagram is the RS. The state transition corresponds to the assertion of the LPI_REQUEST parameter. The request is indicated to the PHY according to the requirements of the RS (see IEEE Std 802.3 22.7, 35.4, 46.4.)
-                      This counter has a maximum increment rate of 50 000 counts per second at 100 Mb/s; 90 000 counts per second at 1000 Mb/s; and 230 000 counts per second at 10 Gb/s. ";
-                    reference "IEEE Std 802.3, 30.3.2.1.10 aTransmitLPITransitions";
-                }
-                leaf out-lpi-ms {
-                    type uint64;
-                    units microsends;
-                    description 
-                     "A count reflecting the amount of time that the LPI_INDICATION parameter has the value ASSERT.
-                      The request is indicated to the PHY according to the requirements of the RS (see IEEE Std 802.3 22.7, 35.4, and 46.4).
-                      This counter has a maximum increment rate of 1 000 000 counts per second. ";
-                    reference "IEEE Std 802.3, 30.3.2.1.9 aReceiveLPIMicroseconds";
-                }
-            }
-
+      leaf rate-control-ability {
+        type boolean;
+        description 
+          "The value of 'false' for IEEE Std 802.3 Ethernet
+           interfaces operating at speeds above 1000 Mb/s that do not
+           support Rate Control through lowering the average data
+           rate of the MAC sublayer, with frame granularity.  The
+           value of 'true' for IEEE Std 802.3 Ethernet interfaces
+           operating at speeds above 1000 Mb/s that support Rate
+           Control through lowering the average data rate of the MAC
+           sublayer, with frame granularity.";
+        reference "IEEE Std 802.3, 30.3.1.1.33, aRateControlAbility";
+      }
+      container statistics-csmacd {
+        description
+          "Group of statistics specific to CSMA/CD operation of
+           selected IEEE Std 802.3 Ethernet interfaces.";
+      }
+      container statistics-macc {
+        description
+          "Group of statistics specific to MAC Control operation of
+           selected IEEE Std 802.3 Ethernet interfaces.";
+        reference 
+          "IEEE Std 802.3, IEEE Std 802.3.1, dot3ExtensionTable";
+        leaf in-pkts-macc-extension {
+          type uint64;
+          units frames;
+          description 
+            "A count of Extension MAC Control frames received on this
+             IEEE Std 802.3 Ethernet interface.  Discontinuities in
+             the value of this counter can occur at re-initialization
+             of the management system, and at other times as
+             indicated by the value of ifCounterDiscontinuityTime.";
+          reference 
+            "IEEE Std 802.3, 30.3.8.2
+               aEXTENSIONMACCtrlFramesReceived,
+             IEEE Std 802.3.1, dot3HCInExtensionFrames";
+        }
+        leaf in-pkts-macc-pfc {
+          type uint64;
+          units frames;
+          description 
+            "A count of PFC MAC Control frames received on this IEEE
+             Std 802.3 Ethernet interface.  Discontinuities in the
+             value of this counter can occur at re-initialization of
+             the management system, and at other times as indicated
+             by the value of ifCounterDiscontinuityTime.";
+          reference "IEEE Std 802.3.1, dot3HCInPFCFrames";
+        }
+        leaf in-pkts-macc-pause {
+          type uint64;
+          units frames;
+          description 
+            "A count of PAUSE MAC Control frames received on this
+             IEEE Std 802.3 Ethernet interface.  This counter does
+             not increment when the IEEE Std 802.3 Ethernet interface
+             is operating in half-duplex mode Discontinuities in the
+             value of this counter can occur at re-initialization of
+             the management system, and at other times as indicated
+             by the value of ifCounterDiscontinuityTime.";
+          reference 
+            "IEEE Std 802.3, 30.3.4.3,aPAUSEMACCtrlFramesReceived
+             IEEE Std 802.3.1, dot3HCInPauseFrames and
+             dot3InPauseFrames";
+        }
+        leaf in-pkts-macc-unknown {
+          type uint64;
+          units frames;
+          description 
+            "A count of MAC Control frames with
+             unknown/undefined/unsupported received on this IEEE Std
+             802.3 Ethernet interface.  This counter does not
+             increment when the IEEE Std 802.3 Ethernet interface is
+             operating in half-duplex mode Discontinuities in the
+             value of this counter can occur at re-initialization of
+             the management system, and at other times as indicated
+             by the value of ifCounterDiscontinuityTime.";
+          reference 
+            "IEEE Std 802.3, 30.3.3.5 aUnsupportedOpcodesReceived
+             IEEE Std 802.3.1, dot3ControlInUnknownOpcodes and
+             dot3HCControlInUnknownOpcodes";
+        }
+        leaf out-pkts-macc-extension {
+          type uint64;
+          units frames;
+          description 
+            "A count of Extension MAC Control frames transmitted on
+             this IEEE Std 802.3 Ethernet interface.  Discontinuities
+             in the value of this counter can occur at
+             re-initialization of the management system, and at other
+             times as indicated by the value of
+             ifCounterDiscontinuityTime.";
+          reference 
+            "IEEE Std 802.3, 30.3.8.1
+             aEXTENSIONMACCtrlFramesTransmitted
+             IEEE Std 802.3.1, dot3HCOutExtensionFrames";
+        }
+        leaf out-pkts-macc-pfc {
+          type uint64;
+          units frames;
+          description 
+            "A count of PFC MAC Control frames transmitted on this
+             IEEE Std 802.3 Ethernet interface.  Discontinuities in
+             the value of this counter can occur at re-initialization
+             of the management system, and at other times as
+             indicated by the value of ifCounterDiscontinuityTime.";
+          reference "IEEE Std 802.3.1, dot3HCOutPFCFrames ";
+        }
+        leaf out-pkts-macc-pause {
+          type uint64;
+          units frames;
+          description 
+            "A count of PAUSE MAC Control frames transmitted on this
+             IEEE Std 802.3 Ethernet interface.  This counter does
+             not increment when the IEEE Std 802.3 Ethernet interface
+             is operating in half-duplex mode Discontinuities in the
+             value of this counter can occur at re-initialization of
+             the management system, and at other times as indicated
+             by the value of ifCounterDiscontinuityTime.";
+          reference 
+            "IEEE Std 802.3, 30.3.4.2,aPAUSEMACCtrlFramesTransmitted
+             IEEE Std 802.3.1, dot3HCOutPauseFrames and
+             dot3OutPauseFrames";
+        }
+      }
+      container statistics-lpi {
+        description
+          "Group of statistics specific to MAC Control operation of
+           selected IEEE Std 802.3 Ethernet interfaces.";
+        leaf in-lpi-transiton-count {
+          type uint64;
+          units microsends;
+          description 
+            "A count of occurrences of the transition from DEASSERT
+             to ASSERT of the LPI_INDICATE parameter. The indication
+             reflects the state of the PHY according to the
+             requirements of the RS (see IEEE Std 802.3 22.7, 35.4,
+             and 46.4).  This counter has a maximum increment rate of
+             50 000 counts per second at 100 Mb/s; 90 000 counts per
+             second at 1000 Mb/s; and 230 000 counts per second at 10
+             Gb/s.";
+          reference
+            "IEEE Std 802.3, 30.3.2.1.11 aReceiveLPITransitions";
+        }
+        leaf in-lpi-ms {
+          type uint64;
+          units microsends;
+          description 
+            "A count reflecting the amount of time that the
+             LPI_REQUEST parameter has the value ASSERT.  The request
+             is indicated to the PHY according to the requirements of
+             the RS (see IEEE Std 802.3 22.7, 35.4, and 46.4).  This
+             counter has a maximum increment rate of 1 000 000 counts
+             per second.";
+          reference
+            "IEEE Std 802.3, 30.3.2.1.8 aTransmitLPIMicroseconds";
+        }
+        leaf out-lpi-transiton-count {
+          type uint64;
+          units microsends;
+          description 
+            "A count of occurrences of the transition from state
+             LPI_DEASSERTED to state LPI_ASSERTED of the LPI transmit
+             state diagram is the RS. The state transition
+             corresponds to the assertion of the LPI_REQUEST
+             parameter. The request is indicated to the PHY according
+             to the requirements of the RS (see IEEE Std 802.3 22.7,
+             35.4, 46.4.)  This counter has a maximum increment rate
+             of 50 000 counts per second at 100 Mb/s; 90 000 counts
+             per second at 1000 Mb/s; and 230 000 counts per second
+             at 10 Gb/s.";
+          reference
+            "IEEE Std 802.3, 30.3.2.1.10 aTransmitLPITransitions";
+        }
+        leaf out-lpi-ms {
+          type uint64;
+          units microsends;
+          description 
+            "A count reflecting the amount of time that the
+             LPI_INDICATION parameter has the value ASSERT.  The
+             request is indicated to the PHY according to the
+             requirements of the RS (see IEEE Std 802.3 22.7, 35.4,
+             and 46.4).  This counter has a maximum increment rate of
+             1 000 000 counts per second.";
+          reference
+            "IEEE Std 802.3, 30.3.2.1.9 aReceiveLPIMicroseconds";
+        }
+      }
     }
   }
 }
