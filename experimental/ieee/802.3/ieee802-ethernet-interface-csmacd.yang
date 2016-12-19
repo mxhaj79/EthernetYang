@@ -67,7 +67,15 @@ module ieee802-ethernet-interface-csmacd {
        specific counters";
 
     container "csmacd" {
-      description "XXX, add comment about discontinuity";
+      description
+        "Holds counters that are specific to CDMA/CD half duplex
+         operation of IEEE Std 802.3 Ethernet interfaces.
+
+         Discontinuities in the values of this counters in this
+         container can occur at re-initialization of the management
+         system, and at other times as indicated by the value of the
+         'discontinuity-time' leaf defined in the ietf-interfaces YANG
+         module (RFC 7223).";
       
       leaf in-errors-sqe-test {
         type uint64;
@@ -86,9 +94,8 @@ module ieee802-ethernet-interface-csmacd {
 
            Discontinuities in the value of this counter can occur at
            re-initialization of the management system, and at other
-           times as indicated by the value of the
-           'discontinuity-time' leaf defined in ietf-interfaces YANG
-           module (RFC 7223).";
+           times as indicated by the value of the 'discontinuity-time'
+           leaf defined in the ietf-interfaces YANG module (RFC 7223).";
         reference 
           "IEEE Std 802.3, 7.2.4.6, also 30.3.2.1.4, aSQETestErrors";
       }
@@ -116,8 +123,8 @@ module ieee802-ethernet-interface-csmacd {
 
            Discontinuities in the value of this counter can occur at
            re-initialization of the management system, and at other
-           times as indicated by the value of
-           ifCounterDiscontinuityTime";
+           times as indicated by the value of the 'discontinuity-time'
+           leaf defined in the ietf-interfaces YANG module (RFC 7223).";
         reference
           "IEEE Std 802.3, 30.3.1.1.15,
            aFramesLostDueToIntMACRcvError";
@@ -141,8 +148,8 @@ module ieee802-ethernet-interface-csmacd {
 
            Discontinuities in the value of this counter can occur at
            re-initialization of the management system, and at other
-           times as indicated by the value of
-           ifCounterDiscontinuityTime.";
+           times as indicated by the value of the 'discontinuity-time'
+           leaf defined in the ietf-interfaces YANG module (RFC 7223).";
         reference
           "IEEE Std 802.3, 30.3.1.1.3, aSingleCollisionFrames";
       }
@@ -164,8 +171,8 @@ module ieee802-ethernet-interface-csmacd {
 
            Discontinuities in the value of this counter can occur at
            re-initialization of the management system, and at other
-           times as indicated by the value of
-           ifCounterDiscontinuityTime.";
+           times as indicated by the value of the 'discontinuity-time'
+           leaf defined in the ietf-interfaces YANG module (RFC 7223).";
         reference
           "IEEE Std 802.3, 30.3.1.1.4, aMultipleCollisionFrames";
       }
@@ -188,8 +195,8 @@ module ieee802-ethernet-interface-csmacd {
 
            Discontinuities in the value of this counter can occur at
            re-initialization of the management system, and at other
-           times as indicated by the value of
-           ifCounterDiscontinuityTime.";
+           times as indicated by the value of the 'discontinuity-time'
+           leaf defined in the ietf-interfaces YANG module (RFC 7223).";
         reference
           "IEEE Std 802.3, 30.3.1.1.9, aFramesWithDeferredXmissions";
       }
@@ -207,8 +214,8 @@ module ieee802-ethernet-interface-csmacd {
 
            Discontinuities in the value of this counter can occur at
            re-initialization of the management system, and at other
-           times as indicated by the value of
-           ifCounterDiscontinuityTime";
+           times as indicated by the value of the 'discontinuity-time'
+           leaf defined in the ietf-interfaces YANG module (RFC 7223).";
         reference
           "IEEE Std 802.3, 30.3.1.1.11, aFramesAbortedDueToXSColls";
       }
@@ -231,8 +238,8 @@ module ieee802-ethernet-interface-csmacd {
 
            Discontinuities in the value of this counter can occur at
            re-initialization of the management system, and at other
-           times as indicated by the value of
-           ifCounterDiscontinuityTime";
+           times as indicated by the value of the 'discontinuity-time'
+           leaf defined in the ietf-interfaces YANG module (RFC 7223).";
         reference
           "IEEE Std 802.3, 30.3.1.1.10, aLateCollisions";
       }
@@ -258,8 +265,8 @@ module ieee802-ethernet-interface-csmacd {
 
            Discontinuities in the value of this counter can occur at
            re-initialization of the management system, and at other
-           times as indicated by the value of
-           ifCounterDiscontinuityTime";
+           times as indicated by the value of the 'discontinuity-time'
+           leaf defined in the ietf-interfaces YANG module (RFC 7223).";
         reference
           "IEEE Std 802.3, 30.3.1.1.12,
            aFramesLostDueToIntMACXmitError";
@@ -283,8 +290,8 @@ module ieee802-ethernet-interface-csmacd {
 
            Discontinuities in the value of this counter can occur at
            re-initialization of the management system, and at other
-           times as indicated by the value of
-           ifCounterDiscontinuityTime";
+           times as indicated by the value of the 'discontinuity-time'
+           leaf defined in the ietf-interfaces YANG module (RFC 7223).";
         reference
           "IEEE Std 802.3, 30.3.1.1.13, aCarrierSenseErrors";
       }
@@ -325,10 +332,12 @@ module ieee802-ethernet-interface-csmacd {
              This counter does not increment when the interface is
              operating in full-duplex mode.
 
-             Discontinuities in the value of this counter can occur
-             at re-initialization of the management system, and at
-             other times as indicated by the value of
-             ifCounterDiscontinuityTime.";
+             Discontinuities in the value of this counter can occur at
+             re-initialization of the management system, and at other
+             times as indicated by the value of the
+             'discontinuity-time' leaf defined in the ietf-interfaces
+             YANG module (RFC 7223).";
+
         }
       }
     }
