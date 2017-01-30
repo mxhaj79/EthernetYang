@@ -1,8 +1,8 @@
-module ieee802-ethernet-interface-deprecated {
-  // QUERY - Are we OK to base models on YANG 1.1?
+module ieee802-ethernet-interface-legacy {
   yang-version "1.1";
 
-  namespace "urn:ieee:params:xml:ns:yang:ieee802-ethernet-csmacd";
+  namespace
+    "urn:ieee:srd:802.3:yang:ieee802-ethernet-interface-legacy";
 
   prefix eth-old;
 
@@ -52,9 +52,9 @@ module ieee802-ethernet-interface-deprecated {
      that this module is not anticipated to be widely implemented.";
   reference "IEEE 802.3-2015, unless dated explicitly";
   
-  revision 2016-11-23 {
+  revision 2017-01-20 {
     description
-      "Initial revision of YANG 'deprecated' module for IEEE 802.3
+      "Initial revision of YANG 'legacy' module for IEEE 802.3
        Ethernet interfaces";
     reference 
       "IEEE P802.3.2 (IEEE 802.3cf) YANG Data Model Definitions Task
@@ -162,7 +162,7 @@ module ieee802-ethernet-interface-deprecated {
   }
 
   augment "/if:interfaces-state/if:interface/eth-if:ethernet/" + 
-          "eth-if:statistics" {
+          "eth-if:frame-statistics" {
     when "if:type = 'ianaift:ethernetCsmacd'" {
       description "Applies to all Ethernet interfaces";
     }
@@ -172,7 +172,7 @@ module ieee802-ethernet-interface-deprecated {
 
     container "csma-cd" {
       if-feature "csma-cd";
-      status deprecated; // TODO - Do we need to mark the leaves as well?
+      status deprecated; // TODO - Do we need to mark leaves as well?
       description
         "Holds counters that are specific to CDMA/CD half duplex
          operation of Ethernet interfaces.
@@ -388,7 +388,8 @@ module ieee802-ethernet-interface-deprecated {
           "IEEE 802.3, 30.3.1.1.13, aCarrierSenseErrors";
       }
 
-      // TODO - Not sure whether this should live under the statistics or not.
+      // TODO - Not sure whether this should live under the
+      // statistics or not.
       list collision-histogram {
         key collision-count;
         status deprecated;

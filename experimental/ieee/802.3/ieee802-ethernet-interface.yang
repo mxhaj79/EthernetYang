@@ -51,7 +51,6 @@ module ieee802-ethernet-interface {
      as referring to 'IEEE 802.3 standard compliant Ethernet
      interfaces'";
   reference "IEEE 802.3-2015, unless dated explicitly";
-
   
   revision 2016-11-23 {
     description
@@ -191,11 +190,12 @@ module ieee802-ethernet-interface {
           type boolean;
           
           description
-            "Controls whether auto-negotiation is enabled or disabled.
+            "Controls whether auto-negotiation is enabled or
+             disabled.
              
-             For interface types that support auto-negotiation then it
-             defaults to being enabled.  TODO - Or should the default
-             just be left to vendor discretion?";
+             For interface types that support auto-negotiation then
+             it defaults to being enabled.  TODO - Or should the
+             default just be left to vendor discretion?";
         }
       }
     
@@ -212,8 +212,8 @@ module ieee802-ethernet-interface {
            value then auto-negotiation will fail, and the link will
            not come up.
 
-           Half duplex can only be negotiated for some interface types
-           - as specified in 802.3, annex section 28B.3.";
+           Half duplex can only be negotiated for some interface
+           types - as specified in 802.3, annex section 28B.3.";
         reference "IEEE 802.3, 30.3.1.1.32, aDuplexStatus";
       }
             
@@ -260,7 +260,7 @@ module ieee802-ethernet-interface {
 
           leaf enable {
             type boolean;
-            // TODO - Add must statement to enforce pfc or pause, not both.
+              // TODO - Add must statement to enforce pfc xor pause,
               must "";
 
             description
@@ -273,7 +273,8 @@ module ieee802-ethernet-interface {
 
                If explicitly configured, when auto-negotiated is
                enabled, then the configuration will restrict the
-               priority flow control settings that can be negotiated.";
+               priority flow control settings that can be negotiated.
+               ";
           }
         }
         
@@ -389,18 +390,54 @@ module ieee802-ethernet-interface {
                flow-control is negoiated by default.";
           }
 
-          /*
-            * TODO - Do we move pause frame statistics here?
-           */
+          container statistics {
+            description
+              "Contains the number of PAUSE frames received or
+               transmitted";
+            leaf in-pkts-pause {
+              type yang:counter64;
+              units frames;
+              description 
+                "A count of PAUSE MAC Control frames transmitted on
+                 this Ethernet interface.
+
+                 Discontinuities in the values of this counters in
+                 this container can occur at re-initialization of the
+                 management system, and at other times as indicated
+                 by the value of the 'discontinuity-time' leaf
+                 defined in the ietf-interfaces YANG module (RFC
+                 7223).";
+              reference 
+                "IEEE 802.3, 30.3.4.3, aPAUSEMACCtrlFramesReceived";
+            }
+            leaf out-pkts-pause {
+              type yang:counter64;
+              units frames;
+              description 
+                "A count of PAUSE MAC Control frames transmitted on
+                 this Ethernet interface.
+
+                 Discontinuities in the values of this counters in
+                 this container can occur at re-initialization of the
+                 management system, and at other times as indicated
+                 by the value of the 'discontinuity-time' leaf
+                 defined in the ietf-interfaces YANG module (RFC
+                 7223).";
+              reference 
+                "IEEE 802.3, 30.3.4.2, 
+                 aPAUSEMACCtrlFramesTransmitted";
+            }
+          }
         }
 
-        container priority {
+        container pfc {
           description "802.3 Priority-based flow control";
           reference "IEEE 802.3, Annex 31 D";
 
           leaf enable {
             type boolean;
-            // TODO - Add must statement to enforce pfc or pause, not both.
+              // TODO - Add must statement to enforce pfc or pause,
+              // not both.
               must "";
 
             description
@@ -413,7 +450,44 @@ module ieee802-ethernet-interface {
 
                If explicitly configured, when auto-negotiated is
                enabled, then the configuration will restrict the
-               priority flow control settings that can be negotiated.";
+               priority flow control settings that can be
+               negotiated.";
+          }
+
+          container statistics {
+            description "TODO";
+
+            leaf in-pkts-pfc {
+              type yang:counter64;
+              units frames;
+              description 
+                "A count of PFC MAC Control frames received on this
+                 Ethernet interface.
+
+                 Discontinuities in the values of this counters in
+                 this container can occur at re-initialization of the
+                 management system, and at other times as indicated
+                 by the value of the 'discontinuity-time' leaf
+                 defined in the ietf-interfaces YANG module (RFC
+                 7223).";
+              reference "IEEE 802.3.1, dot3HCInPFCFrames";
+            }
+
+            leaf out-pkts-pfc {
+              type yang:counter64;
+              units frames;
+              description 
+                "A count of PFC MAC Control frames transmitted on
+                 this interface.
+
+                 Discontinuities in the values of this counters in
+                 this container can occur at re-initialization of the
+                 management system, and at other times as indicated
+                 by the value of the 'discontinuity-time' leaf
+                 defined in the ietf-interfaces YANG module (RFC
+                 7223).";
+              reference "IEEE 802.3.1, dot3HCInPFCFrames";
+            }
           }
         }
         
@@ -437,6 +511,15 @@ module ieee802-ethernet-interface {
             "IEEE 802.3 Table 28B-3-Pause resolution";
         }
       }
+
+      leaf max-frame-length {
+        type uint16;
+        units octets;
+        description
+          "This indicates the MAC frame length (including FCS bytes)
+           at which frames are dropped for being too long.";
+        reference "IEEE 802.3, 30.3.1.1.25, aMaxFrameLength";
+      }
       
       // TODO - Do we need this?  Can it be express in a better way?
       leaf macc-extension-control {
@@ -450,7 +533,8 @@ module ieee802-ethernet-interface {
       }
 
       /*
-       * TODO - Should this leaf also be configurable?  Is this a current leaf?
+       * TODO - Should this leaf also be configurable?  Is this a
+       *        current leaf?
        */
       leaf frame-limit-slow-protocol {
         type uint32;
@@ -491,12 +575,11 @@ module ieee802-ethernet-interface {
       /*
        * Ethernet statistics.
        */
-      container statistics {
-        /*
-         * TODO - Factor in some of the RMON Ethernet statistics here.
-         */
+      container frame-statistics {
         description
           "Contains statistics specific to Ethernet interfaces
+ 
+           All frame lengths include the 4 bytes FCS.
 
            Error counters are only reported once ... The count
            represented by an instance of this object is incremented
@@ -507,154 +590,166 @@ module ieee802-ethernet-interface {
            exclusively according to the error status presented to the
            LLC.
 
+           The count represented by an instance of this object is
+           incremented when the frameTooLong status is returned by
+           the MAC service to the LLC (or other MAC user). Received
+           frames for which multiple error conditions pertain are,
+           according to the conventions of IEEE 802.3 Layer
+           Management, counted exclusively according to the error
+           status presented to the LLC.
+
+           A frame that is counted by an instance of this object is
+           also counted by the corresponding instance of 'in-errors'
+           leaf defined in the ietf-interfaces YANG module (RFC
+           7223).
+
            Discontinuities in the values of this counters in this
            container can occur at re-initialization of the management
            system, and at other times as indicated by the value of
            the 'discontinuity-time' leaf defined in the
            ietf-interfaces YANG module (RFC 7223).";
-        
-        leaf in-pkts-errors-fcs {
+
+        leaf in-total-octets {
+          type yang:counter64;
+          units octets;
+          description 
+            "TODO.  Total received bytes (good + bad)
+
+             Also see the 'description' statement associated with the
+             parent 'statistics' container for additional semantics.
+             ";
+          reference
+            "IEEE 802.3, TODO";
+        }
+
+        leaf in-total-pkts {
           type yang:counter64;
           units frames;
           description 
-            "A count of receive frames that do not pass the FCS
-             check, regardless of whether or not the frames are an
-             integral number of octects in length, and regardless of
-             the frame length.
+            "TODO.  Total received frames (good + bad)
+
+             Also see the 'description' statement associated with the
+             parent 'statistics' container for additional semantics.
+             ";
+          reference
+            "IEEE 802.3, TODO";
+        }
+
+
+        /*
+         * REVIEW NOTE - DELETE FOR PUBLICATION
+         *
+         * It looks like the definition of the aAlignmentErrors,
+         * means that the counter is not incremented by interfaces 
+         * that are 1Gb/s or faster.  Hence, I used the definition
+         * from the RMON MIB that combined FCS and Alignment into a
+         * single counter.
+         */        
+        leaf in-error-fcs-pkts {
+          type yang:counter64;
+          units frames;
+          description 
+            "A count of receive frames that are of valid length, but
+             do not pass the FCS check, regardless of whether or not
+             the frames are an integral number of octets in length.
 
              This count effective comprises aFrameCheckSequenceErrors
              and aAlignmentErrors added together.
 
-             Note: Coding errors detected by the Physical Layer for
-             speeds above 10 Mb/s will cause the frame to fail the
-             FCS check.
-
-             A frame that is counted by an instance of this object is
-             also counted by the corresponding instance of
-             'in-errors' leaf defined in the ietf-interfaces YANG
-             module (RFC 7223).
-
-             Discontinuities in the values of this counters in this
-             container can occur at re-initialization of the
-             management system, and at other times as indicated by
-             the value of the 'discontinuity-time' leaf defined in
-             the ietf-interfaces YANG module (RFC 7223).";
+             Also see the 'description' statement associated with the
+             parent 'statistics' container for additional semantics.
+             ";
           reference
-            "IEEE 802.3, 30.3.1.1.6, aFrameCheckSequenceErrors";
+            "IEEE 802.3, 30.3.1.1.6, aFrameCheckSequenceErrors;
+             IEEE 802.3, 30.3.1.1.7, aAlignmentErrors";
         }
 
-        leaf in-pkts-errors-alignment {
-          type yang:counter64;
-          units frames;
-          description 
-            "A count of frames received on a particular Ethernet
-             interface that are not an integral number of octets in
-             length and do not pass the FCS check.
-
-             The count represented by an instance of this object is
-             incremented when the alignmentError status is returned
-             by the MAC service to the LLC (or other MAC
-             user). Received frames for which multiple error
-             conditions pertain are, according to the conventions of
-             IEEE 802.3 Layer Management, counted exclusively
-             according to the error status presented to the LLC.
-
-             This counter does not increment for group encoding
-             schemes greater than 4 bits per group.
-
-             A frame that is counted by an instance of this object is
-             also counted by the corresponding instance of
-             'in-errors' leaf defined in the ietf-interfaces YANG
-             module (RFC 7223).
-
-             Discontinuities in the values of this counters in this
-             container can occur at re-initialization of the
-             management system, and at other times as indicated by
-             the value of the 'discontinuity-time' leaf defined in
-             the ietf-interfaces YANG module (RFC 7223).";
-          reference "IEEE 802.3, 30.3.1.1.7, aAlignmentErrors";
-        }
-
-        leaf in-giant-pkts {
+        /*
+         * REVIEW NOTE - DELETE FOR PUBLICATION:
+         * 
+         * RMON MIB has two separate counters for packets < 64 bytes:
+         * (etherStatsUndersizePkts etherStatsFragments) depending on
+         * whether the frame passes the FCS check.  Neither clause
+         * 30, nor the Etherlike MIB supports this split, so I've
+         * not included the split counters (it would require two new
+         * counters in clause 30).
+         *
+         * Further, the reference is to clause 30.1.1.1.10, aRunts,
+         * but it isn't clear to me that this reference is entirely
+         * correct.
+         */
+        leaf in-error-runt-pkts {
           type yang:counter64;
           units frames;
           description
             "A count of frames received on a particular Ethernet
-             interface that exceed the maximum permitted frame size.
-             TODO - Ties this back to the oper MTU.
+             interface that are less than 64 bytes in length, and
+             are discarded.
 
-             The count represented by an instance of this object is
-             incremented when the frameTooLong status is returned by
-             the MAC service to the LLC (or other MAC user). Received
-             frames for which multiple error conditions pertain are,
-             according to the conventions of IEEE 802.3 Layer
-             Management, counted exclusively according to the error
-             status presented to the LLC.
+             This counter is incremented regardless of whether the
+             frame passes the FCS check.
 
-             A frame that is counted by an instance of this object is
-             also counted by the corresponding instance of
-             'in-errors' leaf defined in the ietf-interfaces YANG
-             module (RFC 7223).
+             Also see the 'description' statement associated with the
+             parent 'statistics' container for additional semantics.
+             ";
+          reference "IEEE 802.3, 30.3.1.1.10, aRunts???";
+        }
 
-             Discontinuities in the values of this counters in this
-             container can occur at re-initialization of the
-             management system, and at other times as indicated by
-             the value of the 'discontinuity-time' leaf defined in
-             the ietf-interfaces YANG module (RFC 7223).";
+        /*
+         * REVIEW NOTE - DELETE FOR PUBLICATION:
+         *
+         * RMON MIB has two separate counters for oversized packets
+         * (etherStatsOversizePkts & etherStatsJabbers) depending on
+         * whether the frame passes the FCS check.  Neither clause
+         * 30, nor the Etherlike MIB supports this split, so I've
+         * not included the split counters (it would require two new
+         * counters in clause 30).
+         */
+        leaf in-error-giant-pkts {
+          type yang:counter64;
+          units frames;
+          description
+            "A count of frames received on a particular Ethernet
+             interface that exceed the maximum permitted frame size,
+             that is specified in max-frame-length, and are
+             discarded.
+
+             This counter is incremented regardless of whether the
+             frame passes the FCS check.
+
+             Also see the 'description' statement associated with the
+             parent 'statistics' container for additional semantics.
+             ";
           reference "IEEE 802.3, 30.3.1.1.25, aFrameTooLongErrors";
         }
 
-        leaf in-giant-threshold-pkts {
+        leaf out-total-octets {
           type yang:counter64;
           units octets;
-          description
-            "This indicates the MAC frame length at which the
-             'in-giants-pkts' counter is incremented";
-          reference "IEEE 802.3, 30.3.1.1.37, aMaxFrameLength";
-        }
-
-        leaf in-errors-symbol {
-          type yang:counter64;
-          units errors;
           description 
-            "For an IEEE 802.3 Ethernet operating at 100 Mb/s, the
-             number of times there was an invalid data symbol when a
-             valid carrier was present.  For an IEEE 802.3 Ethernet
-             operating in half-duplex mode at 1000 Mb/s, the number
-             of times the receiving media is non-idle (a carrier
-             event) for a period of time equal to or greater than
-             slotTime, and during which there was at least one
-             occurrence of an event that causes the PHY to indicate
-             'Data reception error' or 'carrier extend error' on the
-             GMII.  For an IEEE Std 802.3 Ethernet operating in
-             full-duplex mode at 1000 Mb/s, the number of times the
-             receiving media is non-idle (a carrier event) for a
-             period of time equal to or greater than minFrameSize,
-             and during which there was at least one occurrence of an
-             event that causes the PHY to indicate 'Data reception
-             error' on the GMII.  For an IEEE 802.3 Ethernet
-             operating at 10 Gb/s, 40 Gb/s, and 100 Gb/s, it is a
-             count of the number of times the receiving media is
-             non-idle (the time between the Start of Packet Delimiter
-             and the End of Packet Delimiter) for a period of time
-             equal to or greater than minFrameSize, and during which
-             there was at least one occurrence of an event that
-             causes the PHY to indicate 'Receive Error' on the XGMII,
-             the XLGMII, or the CGMII. The count represented by an
-             instance of this object is incremented at most once per
-             carrier event, even if multiple symbol errors occur
-             during the carrier event.  This count does not increment
-             if a collision is present.  This counter does not
-             increment when the IEEE 802.3 Ethernet is operating at
-             10 Mb/s.  Discontinuities in the value of this counter
-             can occur at re-initialization of the management system,
-             and at other times as indicated by the value of
-             ifCounterDiscontinuityTime";
-          reference 
-            "IEEE 802.3, 30.3.2.1.5, aSymbolErrorDuringCarrier";
+            "TODO.  Total received bytes (good + bad)
+
+             Also see the 'description' statement associated with the
+             parent 'statistics' container for additional semantics.
+             ";
+          reference
+            "IEEE 802.3, TODO";
         }
 
-        leaf out-errors-MAC-internal {
+        leaf out-total-pkts {
+          type yang:counter64;
+          units frames;
+          description 
+            "TODO.  Total received frames (good + bad)
+
+             Also see the 'description' statement associated with the
+             parent 'statistics' container for additional semantics.
+             ";
+          reference
+            "IEEE 802.3, TODO";
+        }
+
+        leaf out-error-mac-internal {
           type yang:counter64;
           units errors;
           description 
@@ -673,71 +768,106 @@ module ieee802-ethernet-interface {
              errors on a particular IEEE Std 802.3 Ethernet interface
              that are not otherwise counted.
 
-             Discontinuities in the value of this counter can occur
-             at re-initialization of the management system, and at
-             other times as indicated by the value of the
-             'discontinuity-time' leaf defined in the ietf-interfaces
-             YANG module (RFC 7223).";
+             Also see the 'description' statement associated with the
+             parent 'statistics' container for additional semantics.
+             ";
           reference
             "IEEE Std 802.3, 30.3.1.1.12,
              aFramesLostDueToIntMACXmitError";
         }
       }
-    }
-  }
-  
-  /*
-   * Operational State.
-   */
-  augment "/if:interfaces-state/if:interface/if:statistics" {
-    when "if:type = 'ianaift:ethernetCsmacd'" {
-      description
-        "Applies to all IEEE 802.3 Ethernet interfaces";
-    }
-    description
-      "Augments 'statistics' container in
-       ietf-interfaces/interfaces-state model for IEEE 802.3
-       Ethernet interfaces";
-    
-    container ethernet {
-      description
-        "Contains statistics specific to IEEE 802.3 Ethernet
-         interfaces";
 
-            // TODO - Not a statistic :-)
-      container statistics-macc {
+      container phy-statistics {
+        description "XXX";
+
+        leaf in-errors-symbol {
+          type yang:counter64;
+          units errors;
+          description 
+            "A count of the number of symbol errors that have
+             occurred.
+
+             For the precise definition of when the symbol error
+             counter is incremented, please see the description text
+             associated with aSymbolErrorDuringCarrier, specified in
+             IEEE 802.3, section 30.3.2.1.5.
+
+             Discontinuities in the value of this counter can occur
+             at re-initialization of the management system, and at
+             other times as indicated by the value of
+             ifCounterDiscontinuityTime";
+          reference 
+            "IEEE 802.3, 30.3.2.1.5, aSymbolErrorDuringCarrier";
+        }
+
+        container lpi {
+          description "XXX";
+
+          leaf in-lpi-transitions {
+            type yang:counter64;
+            units transitions;
+            description 
+              "A count of occurrences of the transition from DEASSERT
+             to ASSERT of the LPI_INDICATE parameter. The indication
+             reflects the state of the PHY according to the
+             requirements of the RS (see IEEE 802.3 22.7, 35.4, and
+             46.4).";
+            reference
+              "IEEE 802.3, 30.3.2.1.11 aReceiveLPITransitions";
+          }
+
+          leaf in-lpi-time {
+            type decimal64 {
+              fraction-digits 6;
+            }
+            units seconds;
+            description 
+              "A count reflecting the amount of time that the
+             LPI_REQUEST parameter has the value ASSERT.  The request
+             is indicated to the PHY according to the requirements of
+             the RS (see IEEE 802.3 22.7, 35.4, and 46.4).";
+            reference
+              "IEEE 802.3, 30.3.2.1.9 aReceiveLPIMicroseconds";
+          }
+
+          leaf out-lpi-transitions {
+            type yang:counter64;
+            units transitions;
+            description 
+              "A count of occurrences of the transition from state
+             LPI_DEASSERTED to state LPI_ASSERTED of the LPI transmit
+             state diagram is the RS. The state transition
+             corresponds to the assertion of the LPI_REQUEST
+             parameter. The request is indicated to the PHY according
+             to the requirements of the RS (see IEEE 802.3 22.7,
+             35.4, 46.4.)";
+            reference
+              "IEEE 802.3, 30.3.2.1.10 aTransmitLPITransitions";
+          }
+
+          leaf out-lpi-time {
+            type decimal64 {
+              fraction-digits 6;
+            }
+            units seconds;
+            description 
+              "A count reflecting the amount of time that the
+             LPI_INDICATION parameter has the value ASSERT.  The
+             request is indicated to the PHY according to the
+             requirements of the RS (see IEEE 802.3 22.7, 35.4, and
+             46.4).";
+            reference
+              "IEEE 802.3, 30.3.2.1.8 aTransmitPIMicroseconds";
+          }
+        }
+      }
+
+      container mac-control-statistics {
         description
           "Group of statistics specific to MAC Control operation of
            selected Ethernet interfaces.";
         reference 
           "IEEE 802.3, IEEE 802.3.1, dot3ExtensionTable";
-
-        leaf in-pkts-macc-extension {
-          type yang:counter64;
-          units frames;
-          description 
-            "A count of Extension MAC Control frames received on this
-             Ethernet interface.  Discontinuities in the value of
-             this counter can occur at re-initialization of the
-             management system, and at other times as indicated by
-             the value of ifCounterDiscontinuityTime.";
-          reference 
-            "IEEE 802.3, 30.3.8.2
-               aEXTENSIONMACCtrlFramesReceived,
-             IEEE 802.3.1, dot3HCInExtensionFrames";
-        }
-
-        leaf in-pkts-macc-pfc {
-          type yang:counter64;
-          units frames;
-          description 
-            "A count of PFC MAC Control frames received on this
-             Ethernet interface.  Discontinuities in the value of
-             this counter can occur at re-initialization of the
-             management system, and at other times as indicated by
-             the value of ifCounterDiscontinuityTime.";
-          reference "IEEE 802.3.1, dot3HCInPFCFrames";
-        }
 
         leaf in-pkts-macc-unknown {
           type yang:counter64;
@@ -746,16 +876,20 @@ module ieee802-ethernet-interface {
             "A count of MAC Control frames with
              unknown/undefined/unsupported received on this Ethernet
              interface.  This counter does not increment when the
-             Ethernet interface is operating in half-duplex mode.
-             
-             Discontinuities in the value of this counter can occur
-             at re-initialization of the management system, and at
-             other times as indicated by the value of
-             ifCounterDiscontinuityTime.";
+             Ethernet interface is operating in half-duplex mode.";
           reference 
-            "IEEE 802.3, 30.3.3.5 aUnsupportedOpcodesReceived
-             IEEE 802.3.1, dot3ControlInUnknownOpcodes and
-             dot3HCControlInUnknownOpcodes";
+            "IEEE 802.3, 30.3.3.5 aUnsupportedOpcodesReceived";
+        }
+
+        leaf in-pkts-macc-extension {
+          type yang:counter64;
+          units frames;
+          description 
+            "A count of Extension MAC Control frames received on this
+             Ethernet interface.";
+          reference 
+            "IEEE 802.3, 30.3.8.2
+               aEXTENSIONMACCtrlFramesReceived";
         }
 
         leaf out-pkts-macc-extension {
@@ -763,113 +897,10 @@ module ieee802-ethernet-interface {
           units frames;
           description 
             "A count of Extension MAC Control frames transmitted on
-             this Ethernet interface.
-
-             Discontinuities in the value of this counter can occur
-             at re-initialization of the management system, and at
-             other times as indicated by the value of
-             ifCounterDiscontinuityTime.";
+             this Ethernet interface.";
           reference 
             "IEEE 802.3, 30.3.8.1
-             aEXTENSIONMACCtrlFramesTransmitted
-             IEEE 802.3.1, dot3HCOutExtensionFrames";
-        }
-
-        leaf out-pkts-macc-pfc {
-          type yang:counter64;
-          units frames;
-          description 
-            "A count of PFC MAC Control frames transmitted on this
-             Ethernet interface.
-
-             Discontinuities in the value of this counter can occur
-             at re-initialization of the management system, and at
-             other times as indicated by the value of
-             ifCounterDiscontinuityTime.";
-          reference "IEEE 802.3.1, dot3HCOutPFCFrames ";
-        }
-
-        leaf out-pkts-macc-pause {
-          type yang:counter64;
-          units frames;
-          description 
-            "A count of PAUSE MAC Control frames transmitted on this
-             Ethernet interface.  This counter does not increment
-             when the IEEE 802.3 Ethernet interface is operating in
-             half-duplex mode.
-
-             Discontinuities in the value of this counter can occur
-             at re-initialization of the management system, and at
-             other times as indicated by the value of
-             ifCounterDiscontinuityTime.";
-          reference 
-            "IEEE 802.3, 30.3.4.2,aPAUSEMACCtrlFramesTransmitted
-             IEEE 802.3.1, dot3HCOutPauseFrames and
-             dot3OutPauseFrames";
-        }
-      }
-
-      container statistics-lpi {
-        description
-          "Group of statistics specific to MAC Control operation of
-           selected Ethernet interfaces.";
-        leaf in-lpi-transiton-count {
-          type yang:counter64;
-          units microsends;
-          description 
-            "A count of occurrences of the transition from DEASSERT
-             to ASSERT of the LPI_INDICATE parameter. The indication
-             reflects the state of the PHY according to the
-             requirements of the RS (see IEEE 802.3 22.7, 35.4, and
-             46.4).  This counter has a maximum increment rate of 50
-             000 counts per second at 100 Mb/s; 90 000 counts per
-             second at 1000 Mb/s; and 230 000 counts per second at 10
-             Gb/s.";
-          reference
-            "IEEE 802.3, 30.3.2.1.11 aReceiveLPITransitions";
-        }
-        leaf in-lpi-ms {
-          type yang:counter64;
-          units microsends;
-          description 
-            "A count reflecting the amount of time that the
-             LPI_REQUEST parameter has the value ASSERT.  The request
-             is indicated to the PHY according to the requirements of
-             the RS (see IEEE 802.3 22.7, 35.4, and 46.4).  This
-             counter has a maximum increment rate of 1 000 000 counts
-             per second.";
-          reference
-            "IEEE 802.3, 30.3.2.1.8 aTransmitLPIMicroseconds";
-        }
-        leaf out-lpi-transiton-count {
-          type yang:counter64;
-          units microsends;
-          description 
-            "A count of occurrences of the transition from state
-             LPI_DEASSERTED to state LPI_ASSERTED of the LPI transmit
-             state diagram is the RS. The state transition
-             corresponds to the assertion of the LPI_REQUEST
-             parameter. The request is indicated to the PHY according
-             to the requirements of the RS (see IEEE 802.3 22.7,
-             35.4, 46.4.)  This counter has a maximum increment rate
-             of 50 000 counts per second at 100 Mb/s; 90 000 counts
-             per second at 1000 Mb/s; and 230 000 counts per second
-             at 10 Gb/s.";
-          reference
-            "IEEE 802.3, 30.3.2.1.10 aTransmitLPITransitions";
-        }
-        leaf out-lpi-ms {
-          type yang:counter64;
-          units microsends;
-          description 
-            "A count reflecting the amount of time that the
-             LPI_INDICATION parameter has the value ASSERT.  The
-             request is indicated to the PHY according to the
-             requirements of the RS (see IEEE 802.3 22.7, 35.4, and
-             46.4).  This counter has a maximum increment rate of 1
-             000 000 counts per second.";
-          reference
-            "IEEE 802.3, 30.3.2.1.9 aReceiveLPIMicroseconds";
+             aEXTENSIONMACCtrlFramesTransmitted";
         }
       }
     }
