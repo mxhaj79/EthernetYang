@@ -143,6 +143,11 @@ module ieee802-ethernet-interface {
       "IEEE 802.3.1, dot3PauseAdminMode and dot3PauseOperMode";
   }
 
+  feature ethernet-pfc {
+    description
+      "This device supports Ethernet priority flow-control";
+  }
+
   // TODO - How should MPCP be handled?
 
   augment "/if:interfaces/if:interface" {
@@ -251,7 +256,8 @@ module ieee802-ethernet-interface {
           }
         }
 
-        container priority {
+        container pfc {
+          if-feature "ethernet-pfc";
           description "802.3 Priority-based flow control";
           reference "IEEE 802.3, Annex 31 D";
 
@@ -276,7 +282,8 @@ module ieee802-ethernet-interface {
         }
         
         leaf force-flow-control {
-          type empty;
+          type boolean;
+          default false;
           description
             "Explicitly force the local flow control settings
              regardless of what has been negotiated.
@@ -428,6 +435,7 @@ module ieee802-ethernet-interface {
         }
 
         container pfc {
+          if-feature "ethernet-pfc";
           description "802.3 Priority-based flow control";
           reference "IEEE 802.3, Annex 31 D";
 
@@ -489,7 +497,7 @@ module ieee802-ethernet-interface {
         }
         
         leaf force-flow-control {
-          type empty;
+          type boolean;
           description
             "Explicitly force the local flow control settings
              regardless of what has been negotiated.
