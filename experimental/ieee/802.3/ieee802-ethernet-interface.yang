@@ -1,9 +1,6 @@
 module ieee802-ethernet-interface {
-  // QUERY - Are we OK to base models on YANG 1.1?
   yang-version "1.1";
 
-  // TODO - Should we moved files under standard/802.3/drafts,
-  //        away from experimental?
   namespace
     "urn:ieee:params:xml:ns:yang:ieee802-ethernet-interface";
 
@@ -52,7 +49,7 @@ module ieee802-ethernet-interface {
      interfaces'";
   reference "IEEE 802.3-2015, unless dated explicitly";
   
-  revision 2016-11-23 {
+  revision 2017-02-23 {
     description
       "Initial revision of YANG model for IEEE 802.3 Ethernet
        interfaces.
@@ -579,7 +576,7 @@ module ieee802-ethernet-interface {
         description
           "Contains statistics specific to Ethernet interfaces
  
-           All frame lengths include the 4 bytes FCS.
+           All octet frame lengths include the 4 byte FCS.
 
            Error counters are only reported once ... The count
            represented by an instance of this object is incremented
@@ -589,14 +586,6 @@ module ieee802-ethernet-interface {
            to the conventions of IEEE 802.3 Layer Management, counted
            exclusively according to the error status presented to the
            LLC.
-
-           The count represented by an instance of this object is
-           incremented when the frameTooLong status is returned by
-           the MAC service to the LLC (or other MAC user). Received
-           frames for which multiple error conditions pertain are,
-           according to the conventions of IEEE 802.3 Layer
-           Management, counted exclusively according to the error
-           status presented to the LLC.
 
            A frame that is counted by an instance of this object is
            also counted by the corresponding instance of 'in-errors'
@@ -609,30 +598,115 @@ module ieee802-ethernet-interface {
            the 'discontinuity-time' leaf defined in the
            ietf-interfaces YANG module (RFC 7223).";
 
-        leaf in-total-octets {
-          type yang:counter64;
-          units octets;
-          description 
-            "TODO.  Total received bytes (good + bad)
-
-             Also see the 'description' statement associated with the
-             parent 'statistics' container for additional semantics.
-             ";
-          reference
-            "IEEE 802.3, TODO";
-        }
-
         leaf in-total-pkts {
           type yang:counter64;
           units frames;
           description 
-            "TODO.  Total received frames (good + bad)
+            "The total number of frames (including bad frames)
+             received on the Ethernet interface.
+
+             This counter is calculated by summing the following
+             802.3 clause 30 counters:
+                 aFramesReceivedOK +
+                 aFrameCheckSequenceErrors + 
+                 aAlignmentErrors + 
+                 aFrameTooLongErrors + 
+                 <aFrameTooShortErrors> +
+                 aFramesLostDueToIntMACRcvError
 
              Also see the 'description' statement associated with the
-             parent 'statistics' container for additional semantics.
+             parent 'statistics' container for additional common
+             semantics related to this counter.
              ";
+
+          // REVIEW NOTE - aFrameTooShortErrors is not currently
+          // defined.
           reference
-            "IEEE 802.3, TODO";
+            "IEEE 802.3, various clause 30 counters, as specified in
+             the description above.";
+        }
+
+        leaf in-total-octets {
+          type yang:counter64;
+          units octets;
+          description 
+            "The total number of octets of data (including those in
+             bad frames) received on the Ethernet interface.
+
+             Includes the 4 byte FCS.
+
+             Also see the 'description' statement associated with the
+             parent 'statistics' container for additional common
+             semantics related to this counter.";
+
+          // REVIEW NOTE - There does not appear to be any clause 30
+          // register defined for this counter.
+          reference
+            "(RMON MIB: etherStatsOctets) IEEE 802.3, TODO";
+        }
+
+        leaf in-pkts {
+          type yang:counter64;
+          units frames;
+          description 
+            "A count of frames (including unicast, multicast and
+             broadcast) that have been successfully received on
+             the Ethernet interface.
+
+             This count does not include frames received with
+             frame-too-long, FCS, length or alignment errors, or
+             frames lost due to internal MAC sublayer error.
+
+             Also see the 'description' statement associated with the
+             parent 'statistics' container for additional common
+             semantics related to this counter.";
+
+          reference
+            "IEEE 802.3, 30.3.1.1.5 aFramesReceivedOK";
+        }
+
+        leaf in-multicast-pkts {
+          type yang:counter64;
+          units frames;
+          description 
+            "A count of multicast frames that have been successfully
+             received on the Ethernet interface.
+
+             This counter represents a subset of the frames counted
+             by in-pkts.
+
+             This count does not include frames received with
+             frame-too-long, FCS, length or alignment errors, or
+             frames lost due to internal MAC sublayer error.
+
+             Also see the 'description' statement associated with the
+             parent 'statistics' container for additional common
+             semantics related to this counter.";
+
+          reference
+            "IEEE 802.3, 30.3.1.1.21 aMulticastFramesReceivedOK";
+        }
+
+        leaf in-broadcast-pkts {
+          type yang:counter64;
+          units frames;
+          description 
+            "A count of broadcast frames that have been successfully
+             received on the Ethernet interface.
+
+             This counter represents a subset of the frames counted
+             by in-pkts.
+
+             This count does not include frames received with
+             frame-too-long, FCS, length or alignment errors, or
+             frames lost due to internal MAC sublayer error.
+
+             Also see the 'description' statement associated with the
+             parent 'statistics' container for additional common
+             semantics related to this counter.";
+
+          reference
+            "IEEE 802.3, 30.3.1.1.22 aBroadcastFramesReceivedOK";
         }
 
 
@@ -657,8 +731,9 @@ module ieee802-ethernet-interface {
              and aAlignmentErrors added together.
 
              Also see the 'description' statement associated with the
-             parent 'statistics' container for additional semantics.
-             ";
+             parent 'statistics' container for additional common
+             semantics related to this counter.";
+
           reference
             "IEEE 802.3, 30.3.1.1.6, aFrameCheckSequenceErrors;
              IEEE 802.3, 30.3.1.1.7, aAlignmentErrors";
@@ -678,7 +753,7 @@ module ieee802-ethernet-interface {
          * but it isn't clear to me that this reference is entirely
          * correct.
          */
-        leaf in-error-runt-pkts {
+        leaf in-error-undersize-pkts {
           type yang:counter64;
           units frames;
           description
@@ -690,9 +765,13 @@ module ieee802-ethernet-interface {
              frame passes the FCS check.
 
              Also see the 'description' statement associated with the
-             parent 'statistics' container for additional semantics.
-             ";
-          reference "IEEE 802.3, 30.3.1.1.10, aRunts???";
+             parent 'statistics' container for additional common
+             semantics related to this counter.";
+
+          // REVIEW NOTE - This reference does not appear to be
+          // correct, is a new clause 30 register
+          // definition required?         
+          reference "IEEE 802.3, ";
         }
 
         /*
@@ -705,7 +784,7 @@ module ieee802-ethernet-interface {
          * not included the split counters (it would require two new
          * counters in clause 30).
          */
-        leaf in-error-giant-pkts {
+        leaf in-error-oversize-pkts {
           type yang:counter64;
           units frames;
           description
@@ -718,59 +797,117 @@ module ieee802-ethernet-interface {
              frame passes the FCS check.
 
              Also see the 'description' statement associated with the
-             parent 'statistics' container for additional semantics.
-             ";
+             parent 'statistics' container for additional common
+             semantics related to this counter.";
+
           reference "IEEE 802.3, 30.3.1.1.25, aFrameTooLongErrors";
         }
 
-        leaf out-total-octets {
-          type yang:counter64;
-          units octets;
-          description 
-            "TODO.  Total received bytes (good + bad)
-
-             Also see the 'description' statement associated with the
-             parent 'statistics' container for additional semantics.
-             ";
-          reference
-            "IEEE 802.3, TODO";
-        }
-
-        leaf out-total-pkts {
+        leaf in-error-mac-internal-pkts {
           type yang:counter64;
           units frames;
           description 
-            "TODO.  Total received frames (good + bad)
-
-             Also see the 'description' statement associated with the
-             parent 'statistics' container for additional semantics.
-             ";
-          reference
-            "IEEE 802.3, TODO";
-        }
-
-        leaf out-error-mac-internal {
-          type yang:counter64;
-          units errors;
-          description 
-            "A count of frames for which transmission on a particular
-             IEEE Std 802.3 Ethernet interface fails due to an
-             internal MAC sublayer transmit error.
+            "A count of frames for which reception on a particular
+             Ethernet interface fails due to an internal MAC sublayer
+             receive error.
 
              A frame is only counted by an instance of this object if
              it is not counted by the corresponding instance of
-             either the 'out-collisions-late' object, the
-             'out-pkts-collisions-excessive' object, or the
-             'out-errors-carrier-sense' object. The precise meaning
-             of the count represented by an instance of this object
-             is implementation-specific. In particular, an instance
-             of this object may represent a count of transmission
-             errors on a particular IEEE Std 802.3 Ethernet interface
-             that are not otherwise counted.
+             either the in-error-fcs-pkts, in-error-undersize-pkts,
+             or in-error-oversize-pkts.  The precise meaning of the
+             count represented by an instance of this object is
+             implementation-specific.
+
+             In particular, an instance of this object may represent
+             a count of receive errors on a particular Ethernet
+             interface that are not otherwise counted.
 
              Also see the 'description' statement associated with the
-             parent 'statistics' container for additional semantics.
-             ";
+             parent 'statistics' container for additional common
+             semantics related to this counter.";
+
+          reference
+            "IEEE 802.3, 30.3.1.1.15,
+             aFramesLostDueToIntMACRcvError";
+        }
+
+        /*
+         * Egress counters.
+         */
+        // REVIEW NOTE: No out-total-octets counter since the
+        // definition would match the out-octets counter in the
+        // ietf-interfaces YANG module.  
+
+        leaf out-pkts {
+          type yang:counter64;
+          units frames;
+          description 
+            "A count of frames (including unicast, multicast and
+             broadcast) that have been successfully transmitted on
+             the Ethernet interface.
+
+             Also see the 'description' statement associated with the
+             parent 'statistics' container for additional common
+             semantics related to this counter.";
+
+          reference
+            "IEEE 802.3, 30.3.1.1.2 aFramesTransmittedOK";
+        }
+
+        leaf out-multicast-pkts {
+          type yang:counter64;
+          units frames;
+          description 
+            "A count of multicast frames that have been successfully
+             transmitted on the Ethernet interface.
+
+             This counter represents a subset of the frames counted
+             by out-pkts.
+
+             Also see the 'description' statement associated with the
+             parent 'statistics' container for additional common
+             semantics related to this counter.";
+
+          reference
+            "IEEE 802.3, 30.3.1.1.18 aMulticastFramesXmittedOK";
+        }
+
+        leaf out-broadcast-pkts {
+          type yang:counter64;
+          units frames;
+          description 
+            "A count of broadcast frames that have been successfully
+             transmitted on the Ethernet interface.
+
+             This counter represents a subset of the frames counted
+             by out-pkts.
+
+             Also see the 'description' statement associated with the
+             parent 'statistics' container for additional common
+             semantics related to this counter.";
+
+          reference
+            "IEEE 802.3, 30.3.1.1.19 aBroadcastFramesXmittedOK";
+        }
+
+        leaf out-error-mac-internal-pkts {
+          type yang:counter64;
+          units frames;
+          description 
+            "A count of frames for which transmission on a particular
+             Ethernet interface fails due to an internal MAC sublayer
+             transmit error.
+
+             The precise meaning of the count represented by an
+             instance of this object is implementation-specific. In
+             particular, an instance of this object may represent a
+             count of transmission errors on a particular Ethernet
+             interface that are not otherwise counted.
+
+             Also see the 'description' statement associated with the
+             parent 'statistics' container for additional common
+             semantics related to this counter.";
+
           reference
             "IEEE Std 802.3, 30.3.1.1.12,
              aFramesLostDueToIntMACXmitError";
@@ -778,9 +915,16 @@ module ieee802-ethernet-interface {
       }
 
       container phy-statistics {
-        description "XXX";
+        description
+          "Ethernet statistics related to the PHY layer.
 
-        leaf in-errors-symbol {
+           Discontinuities in the values of this counters in this
+           container can occur at re-initialization of the management
+           system, and at other times as indicated by the value of
+           the 'discontinuity-time' leaf defined in the
+           ietf-interfaces YANG module (RFC 7223).";
+
+        leaf in-error-symbol {
           type yang:counter64;
           units errors;
           description 
@@ -792,26 +936,32 @@ module ieee802-ethernet-interface {
              associated with aSymbolErrorDuringCarrier, specified in
              IEEE 802.3, section 30.3.2.1.5.
 
-             Discontinuities in the value of this counter can occur
-             at re-initialization of the management system, and at
-             other times as indicated by the value of
-             ifCounterDiscontinuityTime";
+             Also see the 'description' statement associated with the
+             parent 'phy-statistics' container for additional
+             common semantics related to this counter.";
           reference 
             "IEEE 802.3, 30.3.2.1.5, aSymbolErrorDuringCarrier";
         }
 
         container lpi {
-          description "XXX";
+          description
+            "Physical Ethernet statistics for the energy efficiency
+             related low power idle indications.";
 
           leaf in-lpi-transitions {
             type yang:counter64;
             units transitions;
             description 
               "A count of occurrences of the transition from DEASSERT
-             to ASSERT of the LPI_INDICATE parameter. The indication
-             reflects the state of the PHY according to the
-             requirements of the RS (see IEEE 802.3 22.7, 35.4, and
-             46.4).";
+               to ASSERT of the LPI_INDICATE parameter. The
+               indication reflects the state of the PHY according to
+               the requirements of the RS (see IEEE 802.3 22.7, 35.4,
+               and 46.4).
+
+               Also see the 'description' statement associated with
+               the parent 'phy-statistics' container for additional
+               common semantics related to this counter.";
+
             reference
               "IEEE 802.3, 30.3.2.1.11 aReceiveLPITransitions";
           }
@@ -822,10 +972,16 @@ module ieee802-ethernet-interface {
             }
             units seconds;
             description 
-              "A count reflecting the amount of time that the
-             LPI_REQUEST parameter has the value ASSERT.  The request
-             is indicated to the PHY according to the requirements of
-             the RS (see IEEE 802.3 22.7, 35.4, and 46.4).";
+              "A count reflecting the total amount of time (in
+               seconds) that the LPI_REQUEST parameter has the value
+               ASSERT.  The request is indicated to the PHY according
+               to the requirements of the RS (see IEEE 802.3 22.7,
+               35.4, and 46.4).
+
+               Also see the 'description' statement associated with
+               the parent 'phy-statistics' container for additional
+               common semantics related to this counter.";
+
             reference
               "IEEE 802.3, 30.3.2.1.9 aReceiveLPIMicroseconds";
           }
@@ -835,12 +991,17 @@ module ieee802-ethernet-interface {
             units transitions;
             description 
               "A count of occurrences of the transition from state
-             LPI_DEASSERTED to state LPI_ASSERTED of the LPI transmit
-             state diagram is the RS. The state transition
-             corresponds to the assertion of the LPI_REQUEST
-             parameter. The request is indicated to the PHY according
-             to the requirements of the RS (see IEEE 802.3 22.7,
-             35.4, 46.4.)";
+               LPI_DEASSERTED to state LPI_ASSERTED of the LPI
+               transmit state diagram is the RS. The state transition
+               corresponds to the assertion of the LPI_REQUEST
+               parameter. The request is indicated to the PHY
+               according to the requirements of the RS (see IEEE
+               802.3 22.7, 35.4, 46.4.)
+
+               Also see the 'description' statement associated with
+               the parent 'phy-statistics' container for additional
+               common semantics related to this counter.";
+
             reference
               "IEEE 802.3, 30.3.2.1.10 aTransmitLPITransitions";
           }
@@ -851,11 +1012,16 @@ module ieee802-ethernet-interface {
             }
             units seconds;
             description 
-              "A count reflecting the amount of time that the
-             LPI_INDICATION parameter has the value ASSERT.  The
-             request is indicated to the PHY according to the
-             requirements of the RS (see IEEE 802.3 22.7, 35.4, and
-             46.4).";
+              "A count reflecting the total amount of time (in
+               seconds) that the LPI_INDICATION parameter has the
+               value ASSERT.  The request is indicated to the PHY
+               according to the requirements of the RS (see IEEE
+               802.3 22.7, 35.4, and 46.4).
+
+               Also see the 'description' statement associated with
+               the parent 'phy-statistics' container for additional
+               common semantics related to this counter.";
+
             reference
               "IEEE 802.3, 30.3.2.1.8 aTransmitPIMicroseconds";
           }
@@ -865,7 +1031,14 @@ module ieee802-ethernet-interface {
       container mac-control-statistics {
         description
           "Group of statistics specific to MAC Control operation of
-           selected Ethernet interfaces.";
+           selected Ethernet interfaces.
+
+           Discontinuities in the values of this counters in this
+           container can occur at re-initialization of the management
+           system, and at other times as indicated by the value of
+           the 'discontinuity-time' leaf defined in the
+           ietf-interfaces YANG module (RFC 7223).";
+
         reference 
           "IEEE 802.3, IEEE 802.3.1, dot3ExtensionTable";
 
@@ -873,10 +1046,16 @@ module ieee802-ethernet-interface {
           type yang:counter64;
           units frames;
           description 
-            "A count of MAC Control frames with
-             unknown/undefined/unsupported received on this Ethernet
-             interface.  This counter does not increment when the
-             Ethernet interface is operating in half-duplex mode.";
+            "A count of MAC Control frames with an unsupported opcode
+             received on this Ethernet interface.
+
+             Frames counted against this counter are also counted
+             against in-discards defined in the ietf-interfaces YANG
+             module (RFC 7223).
+
+             Also see the 'description' statement associated with the
+             parent 'mac-control-statistics' container for additional
+             semantics.";
           reference 
             "IEEE 802.3, 30.3.3.5 aUnsupportedOpcodesReceived";
         }
@@ -885,8 +1064,12 @@ module ieee802-ethernet-interface {
           type yang:counter64;
           units frames;
           description 
-            "A count of Extension MAC Control frames received on this
-             Ethernet interface.";
+            "The count of Extension MAC Control frames received on
+             this Ethernet interface.
+
+             Also see the 'description' statement associated with the
+             parent 'mac-control-statistics' container for additional
+             semantics.";
           reference 
             "IEEE 802.3, 30.3.8.2
                aEXTENSIONMACCtrlFramesReceived";
@@ -896,8 +1079,12 @@ module ieee802-ethernet-interface {
           type yang:counter64;
           units frames;
           description 
-            "A count of Extension MAC Control frames transmitted on
-             this Ethernet interface.";
+            "The count of Extension MAC Control frames transmitted on
+             this Ethernet interface.
+
+             Also see the 'description' statement associated with the
+             parent 'mac-control-statistics' container for additional
+             semantics.";
           reference 
             "IEEE 802.3, 30.3.8.1
              aEXTENSIONMACCtrlFramesTransmitted";

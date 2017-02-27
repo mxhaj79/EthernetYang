@@ -207,38 +207,6 @@ module ieee802-ethernet-interface-legacy {
           "IEEE 802.3, 7.2.4.6, also 30.3.2.1.4, aSQETestErrors";
       }
 
-      // TODO - Is this really a half-duplex counter?
-      leaf in-errors-MAC-internal {
-        type yang:counter64;
-        units frames;
-        status deprecated;
-        description 
-          "A count of frames for which reception on a particular
-           Ethernet interface fails due to an internal MAC sublayer
-           receive error.
-
-           A frame is only counted by an instance of this object if
-           it is not counted by the corresponding instance of either
-           the 'in-pkts-too-long' object, the
-           'in-pkts-errors-alignment-FCS' object, or the
-           'in-pkts-errors-FCS' object. The precise meaning of the
-           count represented by an instance of this object is
-           implementation-specific.
-
-           In particular, an instance of this object may represent a
-           count of receive errors on a particular Ethernet interface
-           that are not otherwise counted.
-
-           Discontinuities in the value of this counter can occur at
-           re-initialization of the management system, and at other
-           times as indicated by the value of the
-           'discontinuity-time' leaf defined in the ietf-interfaces
-           YANG module (RFC 7223).";
-        reference
-          "IEEE 802.3, 30.3.1.1.15,
-           aFramesLostDueToIntMACRcvError";
-      }
-
       leaf out-pkts-collision-single {
         type yang:counter64;
         units frames;
