@@ -264,7 +264,7 @@ module ieee802-ethernet-interface {
           leaf enable {
             type boolean;
               // TODO - Add must statement to enforce pfc xor pause,
-              must "";
+              // must "";
 
             description
               "True indicates that 802.3 priority-based flow control
@@ -334,7 +334,7 @@ module ieee802-ethernet-interface {
         }
         
         leaf negotiation-status {
-          when '../enable = true';
+          when "../enable = 'true'";
           type enumeration {
             enum in-progress {
               description
@@ -443,7 +443,7 @@ module ieee802-ethernet-interface {
             type boolean;
               // TODO - Add must statement to enforce pfc or pause,
               // not both.
-              must "";
+              // must "";
 
             description
               "True indicates that 802.3 priority-based flow control

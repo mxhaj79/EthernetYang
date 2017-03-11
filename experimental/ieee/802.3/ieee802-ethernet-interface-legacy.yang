@@ -107,7 +107,7 @@ module ieee802-ethernet-interface-legacy {
   }
 
   augment "/if:interfaces/if:interface/eth-if:ethernet" {
-    when "if:type = 'ianaift:ethernetCsmacd'" {
+    when "../if:type = 'ianaift:ethernetCsmacd'" {
       description "Applies to all Ethernet interfaces";
     }
     description
@@ -129,7 +129,7 @@ module ieee802-ethernet-interface-legacy {
 
   augment "/if:interfaces-state/if:interface/eth-if:ethernet/" + 
           "eth-if:capabilities" {
-    when "if:type = 'ianaift:ethernetCsmacd'" {
+    when "../../if:type = 'ianaift:ethernetCsmacd'" {
       description "Applies to all Ethernet interfaces";
     }
     description
@@ -152,6 +152,11 @@ module ieee802-ethernet-interface-legacy {
     }
   }
 
+/*
+  * Not currently required, but kept in for the moment, in case it is 
+  * needed.  If nothing is here at publication time this this
+  * augmentation can be deleted.
+
   augment "/if:interfaces-state/if:interface/eth-if:ethernet" {
     when "if:type = 'ianaift:ethernetCsmacd'" {
       description "Applies to all Ethernet interfaces";
@@ -160,10 +165,11 @@ module ieee802-ethernet-interface-legacy {
       "Augment with any deprecated Ethernet interface configuration
        parameters";
   }
+*/
 
   augment "/if:interfaces-state/if:interface/eth-if:ethernet/" + 
           "eth-if:frame-statistics" {
-    when "if:type = 'ianaift:ethernetCsmacd'" {
+    when "../../if:type = 'ianaift:ethernetCsmacd'" {
       description "Applies to all Ethernet interfaces";
     }
     description 
